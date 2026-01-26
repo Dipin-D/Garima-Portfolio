@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garima Poudel | RN </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus+Jakarta+Sans', sans-serif; overflow-x: hidden; }
+        .transition-all { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .night-shift { background: #020617 !important; color: #f8fafc !important; }
+        .glass { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        
+        /* Optimized Animations */
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+        .ekg-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 3s linear infinite; }
+        
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.2); }
+            50% { transform: scale(1.02); box-shadow: 0 0 40px 10px rgba(14, 165, 233, 0.1); }
+        }
+        .heart-active { animation: heartPulse 3s ease-in-out infinite; }
+
+        #mainImgFrame { transform-style: preserve-3d; will-change: transform; }
+        
+        /* Custom Cursor */
+        #custom-cursor { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 9999; }
+        .cursor-dot { width: 8px; height: 8px; background-color: #0ea5e9; border-radius: 50%; opacity: 0.7; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, width 0.3s ease-out, height 0.3s ease-out; }
+        .cursor-ring { width: 30px; height: 30px; border: 2px solid #0ea5e9; border-radius: 50%; opacity: 0.3; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, width 0.3s ease-out, height 0.3s ease-out; }
+        .cursor-plus .cursor-dot { width: 2px; height: 16px; border-radius: 0; transform: translate(-50%, -50%) rotate(90deg); background-color: #0ea5e9; }
+        .cursor-plus .cursor-dot::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background-color: #0ea5e9; transform: translateY(-50%) rotate(-90deg); }
+        .cursor-plus .cursor-ring { width: 40px; height: 40px; border: 3px solid #0ea5e9; opacity: 0.5; }
+
+
+        /* Scroll Progress */
+        #scrollProgress { position: fixed; top: 0; left: 0; height: 3px; background: #0ea5e9; z-index: 200; width: 0%; transition: width 0.1s linear; }
+
+        /* Confetti Canvas */
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1000; }
+
+        /* Floating Action Button */
+        #fab { position: fixed; bottom: 30px; right: 30px; z-index: 150; }
+        .fab-button { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .fab-button:hover { background: rgba(14, 165, 233, 0.8); border-color: #0ea5e9; transform: translateY(-5px); }
+        .fab-button svg { color: #0ea5e9; transition: color 0.3s ease; }
+        .fab-button:hover svg { color: white; }
+    </style>
+</head>
+<body id="body" class="bg-slate-50 text-slate-900 transition-all">
+<div id="bg-layers" class="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
+    <div class="absolute inset-0 bg-slate-50 transition-colors duration-700" id="mesh-base">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-sky-200/30 blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-sky-100/40 blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="absolute inset-0 opacity-[0.15]" 
+         style="background-image: radial-gradient(#0ea5e9 0.5px, transparent 0.5px), linear-gradient(to right, #0ea5e9 0.5px, transparent 0.5px), linear-gradient(to bottom, #0ea5e9 0.5px, transparent 0.5px); 
+                background-size: 40px 40px; background-position: 0 0, 0 0, 0 0;">
+    </div>
+
+    <div class="medical-symbol absolute top-[15%] left-[8%] text-sky-300/40 text-6xl font-light select-none rotate-12">+</div>
+    <div class="medical-symbol absolute top-[60%] left-[90%] text-sky-300/30 text-8xl font-light select-none -rotate-12">+</div>
+    <div class="medical-symbol absolute top-[85%] left-[5%] text-sky-400/20 text-[10rem] font-thin select-none rotate-45">+</div>
+    <div class="medical-symbol absolute top-[40%] left-[80%] text-sky-200/40 text-4xl font-bold select-none">+</div>
+</div>
+
+<style>
+    /* Animation for the floating plus signs */
+    .medical-symbol {
+        animation: floatBackground 8s ease-in-out infinite;
+        transition: color 0.7s ease;
+    }
+    @keyframes floatBackground {
+        0%, 100% { transform: translateY(0) rotate(var(--tw-rotate)); }
+        50% { transform: translateY(-30px) rotate(calc(var(--tw-rotate) + 15deg)); }
+    }
+    
+    /* Ensure night-shift handles the new background layers */
+    .night-shift #mesh-base { background-color: #020617 !important; }
+    .night-shift .medical-symbol { color: rgba(255, 255, 255, 0.05) !important; }
+</style>
+    <div id="scrollProgress"></div>
+    <div id="custom-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div id="fab">
+        <a href="mailto:amiragpoudel@gmail.com" class="fab-button group">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        </a>
+    </div>
+
+    <nav id="nav" class="fixed top-0 w-full z-[100] border-b border-slate-200 bg-white/80 glass transition-all">
+        <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+            <span id="logo" class="font-black text-2xl tracking-tighter text-sky-600 italic">GP<span class="text-slate-400 not-italic">.</span>RN</span>
+            <div id="navLinks" class="hidden md:flex items-center space-x-10 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
+                <a href="#about" class="hover:text-sky-600 transition interactive">About</a>
+                <a href="#experience" class="hover:text-sky-600 transition interactive">Experience</a>
+                <a href="#education" class="hover:text-sky-600 transition interactive">Education</a>
+            </div>
+            <button onclick="toggleShift(); triggerConfetti(event);" id="shiftBtn" class="bg-slate-900 text-white px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-sky-500 transition-all active:scale-95 interactive">
+                Switch Shift
+            </button>
+        </div>
+    </nav>
+
+    <header id="about" class="pt-48 pb-20 px-8 relative">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div class="animate__animated animate__fadeInLeft">
+                <div class="inline-block px-4 py-1.5 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-[10px] font-black uppercase tracking-widest mb-6">Open to work</div>
+                <h1 id="heroName" class="text-7xl lg:text-9xl font-black tracking-tighter leading-[0.8] mb-8 transition-all">Garima <br><span class="text-sky-500">Poudel</span></h1>
+                
+                <div class="mb-10 max-w-sm">
+                    <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2"><span>Live Bio-Signature</span><span class="text-sky-500">Stable</span></div>
+                    <div class="bg-sky-500/5 h-10 rounded-xl flex items-center px-4">
+                        <svg viewBox="0 0 100 20" class="w-full h-8"><path class="ekg-line" d="M0 10 L10 10 L15 2 L20 18 L25 10 L40 10 L45 0 L50 20 L55 10 L70 10 L75 5 L80 15 L85 10 L100 10" fill="none" stroke="#0ea5e9" stroke-width="1.5"/></svg>
+                    </div>
+                </div>
+
+                <p id="heroDesc" class="text-xl text-slate-500 max-w-md mb-10 leading-relaxed">New Grad Registered Nurse<br> Committed to providing compassionate, evidence based patient care. Eager to contribute to a high performing clinical team.</p>
+                <a href="https://www.linkedin.com/in/garima-poudel-1a7378301/" target="_blank" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:bg-sky-600 transition-all interactive">Connect on LinkedIn</a>
+            </div>
+            
+            <div class="relative" id="heroImageArea">
+                <div id="mainImgFrame" class="heart-active w-full max-w-sm mx-auto aspect-[3/4] bg-slate-200 rounded-[4rem] overflow-hidden border-[15px] border-white shadow-2xl relative z-10">
+                    <img src="images/portfolio.jpeg" class="w-full h-full object-cover grayscale transition duration-700 hover:grayscale-0" loading="eager">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="experience" class="py-32 px-8">
+        <div class="max-w-7xl mx-auto">
+            <h2 id="expTitle" class="text-6xl font-black tracking-tighter mb-20">Clinical <span class="text-sky-500 italic">Experience</span></h2>
+            <div class="grid gap-12">
+                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
+                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
+                        <img src="images/maternity.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
+                    </div>
+                    <div class="lg:col-span-8 flex flex-col justify-center">
+                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">May 2025 – Jul 2025</span>
+                        <h3 class="text-3xl font-black mb-1 card-title">Nursing Intern – Obstetrics & Gynecology</h3>
+                        <p class="text-slate-400 font-bold mb-6 italic text-sm">BBMP Maternity Hospital, Bengaluru</p>
+                        <ul class="grid md:grid-cols-2 gap-4 text-sm text-slate-500 card-text">
+                            <li><strong class="text-sky-600 block">OPD:</strong> Guided patients, maintained registers for high-risk pregnancies and supported smooth patient flow.</li>
+                            <li><strong class="text-sky-600 block">Labor Room:</strong> Assisted during labor, conducted Non-Stress Tests (NSTs) and ECGs.</li>
+                            <li><strong class="text-sky-600 block">OT:</strong> Supported surgical procedures including cesarean sections and pre/post-operative protocols.</li>
+                            <li><strong class="text-sky-600 block">Postnatal:</strong> Provided breastfeeding guidance, postnatal exercises, and IV monitoring.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
+                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
+                        <img src="https://via.placeholder.com/600x600?text=Mental+Health" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
+                    </div>
+                    <div class="lg:col-span-8 flex flex-col justify-center">
+                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">May 2024 – Jun 2024</span>
+                        <h3 class="text-3xl font-black mb-1 card-title">Student Nurse (Mental Rehabilitation)</h3>
+                        <p class="text-slate-400 font-bold mb-6 italic text-sm">Spandana Hospital, Bengaluru</p>
+                        <ul class="space-y-3 text-sm text-slate-500 card-text">
+                            <li>• Participated in therapeutic modalities: music therapy, psychodrama, and dance therapy for emotional well-being.</li>
+                            <li>• Provided counseling, recreational therapy, and play therapy to individuals in recovery.</li>
+                            <li>• Delivered health education to patients and families regarding coping strategies and wellness.</li>
+                            <li>• Conducted visits to psychiatric specialty units to study collaborative care and management approaches.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
+                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
+                        <img src="images/polio.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
+                    </div>
+                    <div class="lg:col-span-8 flex flex-col justify-center">
+                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">Mar 2024</span>
+                        <h3 class="text-3xl font-black mb-1 card-title">Polio Survey & Vaccination</h3>
+                        <p class="text-slate-400 font-bold mb-6 italic text-sm">Jayashree Speciality Hospital, Bangalore</p>
+                        <ul class="space-y-3 text-sm text-slate-500 card-text">
+                            <li>• Completed a community polio posting focusing on vaccination efforts via PHC centers.</li>
+                            <li>• Assisted in providing polio drops to children while ensuring adherence to safety protocols.</li>
+                            <li>• Collaborated with professionals to educate parents on immunization importance.</li>
+                            <li>• Engaged in data collection and reporting for community health initiatives.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
+                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
+                        <img src="images/community.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
+                    </div>
+                    <div class="lg:col-span-8 flex flex-col justify-center">
+                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">Apr 2023 – May 2023</span>
+                        <h3 class="text-3xl font-black mb-1 card-title">Community Survey & Health Education</h3>
+                        <p class="text-slate-400 font-bold mb-6 italic text-sm">Primary Health Centre Nagarbhavi</p>
+                        <ul class="space-y-2 text-sm text-slate-500 card-text">
+                            <li>• Assessed community needs as part of the BSN 2nd Year curriculum.</li>
+                            <li>• Gained proficiency in the bag technique method for safe home-care delivery.</li>
+                            <li>• Engaged in antenatal education and national health programs utilizing flashcards and pamphlets.</li>
+                            <li>• Provided education to children on worm infestation prevention and hand hygiene.</li>
+                        </ul>
+                    </div>
+                </div>
+                                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500">
+                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
+                        <img src="https://via.placeholder.com/600x600?text=Basic+Nursing" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                    </div>
+                    <div class="lg:col-span-8 flex flex-col justify-center">
+                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2">Oct 2022 – Nov 2022 • Internship</span>
+                        <h3 class="text-3xl font-black mb-1 card-title transition-all">Student Nurse (Clinical Posting - 1st Year)</h3>
+                        <p class="text-slate-400 font-bold mb-6">People’s Tree Hospital, Bengaluru</p>
+                        <ul class="space-y-3 text-sm text-slate-500 card-text transition-all">
+                            <li>• Applied foundational nursing knowledge: bed making and monitoring/recording vital signs.</li>
+                            <li>• Strengthened nurse-patient relationships through patient advocacy and compassionate care.</li>
+                            <li>• Assisted in patient feeding and monitored dietary intake for optimal comfort and nutrition.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-32 px-8">
+        <div class="max-w-7xl mx-auto">
+            <div id="eduCard" class="bg-slate-900 text-white rounded-[5rem] p-16 md:p-24 relative overflow-hidden transition-all">
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-12">
+                    <div class="w-24 h-24 bg-sky-500 rounded-3xl rotate-12 flex items-center justify-center text-4xl font-black shadow-2xl shrink-0 italic">B</div>
+                    <div>
+                        <h2 class="text-sky-400 font-black uppercase tracking-[0.3em] text-[10px] mb-4">University History</h2>
+                        <h3 class="text-5xl md:text-7xl font-black mb-4 tracking-tighter">Bachelors in Nursing (BSN)</h3>
+                        <p class="text-xl text-slate-400">Rajiv Gandhi University of Health Sciences, Bangalore</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center opacity-30 text-[10px] font-black uppercase tracking-[0.5em]">
+        Garima Poudel &copy; 2026
+    </footer>
+
+    <script>
+        // Custom Cursor Logic
+        const customCursor = document.getElementById('custom-cursor');
+        const cursorDot = customCursor.querySelector('.cursor-dot');
+        const cursorRing = customCursor.querySelector('.cursor-ring');
+        const interactiveElements = document.querySelectorAll('a, button, .interactive'); // Added .interactive class
+
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+            cursorRing.style.left = e.clientX + 'px';
+            cursorRing.style.top = e.clientY + 'px';
+        });
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                customCursor.classList.add('cursor-plus');
+            });
+            el.addEventListener('mouseleave', () => {
+                customCursor.classList.remove('cursor-plus');
+            });
+        });
+
+        // Scroll Progress Logic
+        window.addEventListener('scroll', () => {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollProgress").style.width = scrolled + "%";
+        });
+
+        // 3D Image Perspective
+        const area = document.getElementById('heroImageArea');
+        const frame = document.getElementById('mainImgFrame');
+        if (area && frame) { // Check if elements exist
+            area.addEventListener('mousemove', (e) => {
+                const { left, top, width, height } = area.getBoundingClientRect();
+                const x = (e.clientX - left) / width - 0.5;
+                const y = (e.clientY - top) / height - 0.5;
+                frame.style.transform = `perspective(1000px) rotateY(${x * 30}deg) rotateX(${y * -30}deg) scale3d(1.05, 1.05, 1.05)`;
+            });
+            area.addEventListener('mouseleave', () => {
+                frame.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
+            });
+        }
+
+
+        // Confetti Logic (Simplified for performance)
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let particles = [];
+        const maxParticles = 50;
+
+        function resizeConfettiCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfettiCanvas);
+        resizeConfettiCanvas();
+
+        function createConfetti(x, y) {
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    radius: Math.random() * 3 + 1,
+                    color: `hsl(${Math.random() * 30 + 190}, 70%, 60%)`, // Shades of blue
+                    velocity: {
+                        x: (Math.random() - 0.5) * 8,
+                        y: (Math.random() - 0.5) * 8 - 5 // Upwards initial velocity
+                    },
+                    alpha: 1,
+                    gravity: 0.2
+                });
+            }
+        }
+
+        function updateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.velocity.y += p.gravity;
+                p.x += p.velocity.x;
+                p.y += p.velocity.y;
+                p.alpha -= 0.0002; // Fade out
+
+                if (p.alpha > 0) {
+                    confettiCtx.fillStyle = `rgba(${parseInt(p.color.substring(4,7))},${parseInt(p.color.substring(8,11))},${parseInt(p.color.substring(12,15))}, ${p.alpha})`;
+                    confettiCtx.beginPath();
+                    confettiCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    confettiCtx.fill();
+                } else {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(updateConfetti);
+        }
+
+        function triggerConfetti(e) {
+            createConfetti(e.clientX, e.clientY);
+            updateConfetti();
+        }
+
+        // Night Shift Toggle
+        function toggleShift() {
+            const b = document.getElementById('body');
+            const n = document.getElementById('nav');
+            const nL = document.getElementById('navLinks');
+            const hN = document.getElementById('heroName');
+            const eT = document.getElementById('expTitle');
+            const cards = document.querySelectorAll('.card');
+            const frameHero = document.getElementById('mainImgFrame');
+            const fabButton = document.querySelector('.fab-button');
+
+            const isDay = b.classList.contains('bg-slate-50');
+            const btn = document.getElementById('shiftBtn'); 
+            btn.innerText = isDay ? "Day Shift" : "Night Shift"; 
+
+            b.classList.toggle('night-shift', isDay);
+            b.classList.toggle('bg-slate-50', !isDay);
+            
+            n.classList.toggle('bg-slate-900/80', isDay);
+            n.classList.toggle('bg-white/80', !isDay);
+            n.classList.toggle('border-slate-800', isDay);
+            nL.classList.toggle('text-slate-400', isDay);
+            nL.classList.toggle('text-slate-500', !isDay);
+            hN.classList.toggle('text-white', isDay);
+            eT.classList.toggle('text-white', isDay);
+            frameHero.classList.toggle('border-slate-800', isDay);
+            frameHero.classList.toggle('border-white', !isDay);
+
+            cards.forEach(c => {
+                c.classList.toggle('bg-slate-900', isDay);
+                c.classList.toggle('border-slate-800', isDay);
+                c.classList.toggle('bg-white', !isDay);
+                c.querySelector('.card-title').classList.toggle('text-white', isDay);
+                c.querySelector('.card-text').classList.toggle('text-slate-400', isDay);
+            });
+
+            // Adjust FAB color for night shift
+            if (isDay) {
+                fabButton.style.backgroundColor = 'rgba(14, 165, 233, 0.2)';
+                fabButton.style.borderColor = 'rgba(14, 165, 233, 0.3)';
+                fabButton.querySelector('svg').style.color = '#0ea5e9';
+            } else {
+                fabButton.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                fabButton.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                fabButton.querySelector('svg').style.color = '#0ea5e9'; // Keep original blue or adjust if needed
+            }
+        }
+    </script>
+</body>
+</html>
+
+
