@@ -9,65 +9,58 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;600&display=swap');
         
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; background: #0a0510; color: white; 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            touch-action: none; /* Prevents mobile bounce/scroll */
-        }
-        
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0510; color: white; font-family: 'Plus Jakarta Sans', sans-serif; touch-action: none; }
         #three-container { position: fixed; inset: 0; display: none; z-index: 10; background: radial-gradient(circle at center, #2d1b4e 0%, #000 100%); }
         
+        .fade-in { animation: fadeIn 1.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         #start-screen, #reveal-screen { 
             position: fixed; inset: 0; z-index: 1000; 
             background: radial-gradient(circle at bottom, #4c1d95 0%, #0a0510 100%);
             display: flex; flex-direction: column; items: center; justify-content: center; 
-            padding: 20px;
         }
-
         .cursive { font-family: 'Dancing Script', cursive; }
         
         #hud { 
-            position: fixed; top: 40px; width: 100%; text-align: center; z-index: 500; 
+            position: fixed; top: 20px; width: 100%; text-align: center; z-index: 500; 
             opacity: 0; pointer-events: none; transition: all 0.8s ease; 
         }
-
         .bar-bg { 
             width: 80%; max-width: 300px; height: 10px; background: rgba(255,255,255,0.1); 
-            border-radius: 20px; margin: 15px auto; overflow: hidden;
+            border-radius: 20px; margin: 10px auto; overflow: hidden;
             backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);
         }
-
         #bar-fill { 
             width: 0%; height: 100%; background: linear-gradient(90deg, #f43f5e, #fb7185); 
-            box-shadow: 0 0 20px #f43f5e; transition: width 0.4s ease; 
+            box-shadow: 0 0 20px #f43f5e; transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
         #basket { 
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); 
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); 
             font-size: 4rem; z-index: 100; pointer-events: none; opacity: 0; 
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
             transition: opacity 0.5s;
         }
 
+        /* Responsive Final Card */
         .final-card {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            background: rgba(15, 7, 32, 0.8); backdrop-filter: blur(20px);
-            padding: 2rem; border-radius: 2rem; border: 1px solid rgba(251, 191, 36, 0.3);
+            position: fixed; bottom: 5%; left: 50%; transform: translate(-50%, 0) scale(0.9);
+            background: rgba(15, 7, 32, 0.7); backdrop-filter: blur(15px);
+            padding: 1.5rem; border-radius: 2rem; border: 1px solid rgba(251, 191, 36, 0.3);
             text-align: center; opacity: 0; transition: all 2s ease-out; z-index: 2000; 
-            pointer-events: none; width: 90vw; max-width: 450px;
-            box-shadow: 0 0 100px rgba(244, 63, 94, 0.3);
+            pointer-events: none; width: 90%; max-width: 400px;
+            box-shadow: 0 0 50px rgba(244, 63, 94, 0.2);
         }
-
-        .final-card.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+        .final-card.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
 
         .user-pic { 
-            width: 120px; height: 120px; object-fit: cover; border-radius: 50%; 
-            border: 3px solid #fbbf24; margin: 0 auto 1.5rem; 
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.4); 
+            width: 100px; height: 100px; object-fit: cover; border-radius: 50%; 
+            border: 3px solid #fbbf24; margin: 0 auto 1rem; 
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); 
         }
 
-        #game-canvas { position: fixed; inset: 0; z-index: 50; }
+        #game-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
 
         .score-pop { animation: pop 0.3s ease; }
         @keyframes pop { 50% { transform: scale(1.2); color: #fb7185; } }
@@ -82,23 +75,32 @@
 </head>
 <body>
 
-    <audio id="gameSfx" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
-    <audio id="winSong" loop preload="auto"><source src="song.mp3" type="audio/mpeg"></audio>
-    <audio id="yay" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="neh" preload="auto"><source src="https://gfxsounds.com/wp-content/uploads/2023/03/Beep-error.mp3" type="audio/mpeg"></audio>
+    <audio id="gameSfx" loop preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="winSong" loop preload="auto">
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="yay" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="neh" preload="auto">
+        <source src="https://gfxsounds.com/wp-content/uploads/2023/03/Beep-error.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="start-screen">
-        <h1 class="cursive text-6xl md:text-8xl text-rose-200 mb-6 text-center">Dipin's Garden</h1>
-        <button onclick="begin()" class="cursive text-2xl md:text-3xl text-white bg-gradient-to-r from-rose-600 to-rose-400 px-10 py-3 rounded-full hover:scale-105 transition-all">Enter Garden</button>
+        <h1 class="cursive text-6xl md:text-8xl text-rose-200 mb-8 drop-shadow-lg text-center px-4">Dipin's Garden</h1>
+        <p class="text-rose-300 mb-10 tracking-widest uppercase text-xs">A Little Surprise For You Kanxi</p>
+        <button onclick="begin()" class="cursive text-2xl text-white bg-gradient-to-r from-rose-600 to-rose-400 px-10 py-3 rounded-full hover:scale-110 transition-all">Enter Garden</button>
     </div>
 
     <div id="reveal-screen" style="display:none;">
-        <h2 class="cursive text-5xl text-white mb-8 text-center px-4">You caught them all!</h2>
-        <button onclick="bloom()" class="cursive text-4xl text-white bg-gradient-to-r from-amber-600 to-yellow-500 px-12 py-5 rounded-full animate-bounce">Reveal The Garden</button>
+        <h2 class="cursive text-4xl md:text-6xl text-white mb-10 text-center px-6">You've caught my mutu</h2>
+        <button onclick="bloom()" class="cursive text-3xl md:text-5xl text-white bg-gradient-to-r from-amber-600 to-yellow-500 px-12 py-4 rounded-full animate-bounce">Reveal The Garden</button>
     </div>
 
     <div id="hud">
-        <div class="text-rose-100 text-4xl cursive mb-1" id="score-wrapper"><span id="score">0</span> / 20</div>
+        <div class="text-rose-100 text-3xl md:text-5xl cursive mb-2" id="score-wrapper"><span id="score">0</span> / 20</div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
     </div>
 
@@ -108,8 +110,9 @@
 
     <div id="final-card" class="final-card">
         <img src="rose.JPG" class="user-pic" alt="Budi">
-        <h1 class="cursive text-5xl text-rose-100 mb-4">Happy Rose Day, Budi</h1>
-        <p class="text-rose-100 text-lg italic leading-relaxed">
+        <h1 class="cursive text-3xl md:text-5xl text-rose-100 mb-2">Happy Rose Day, Budi</h1>
+        <div class="w-16 h-0.5 bg-rose-500 mx-auto mb-3 rounded-full"></div>
+        <p class="text-rose-100 text-sm md:text-lg italic leading-relaxed">
             "Real ma rose dina napayani mailey yo sundar bagaicha banako xu, happy rose day sanu!"
         </p>
     </div>
@@ -123,7 +126,8 @@
         const gameSfx = document.getElementById('gameSfx');
         const winSong = document.getElementById('winSong');
         
-        let audioContext, width, height, score = 0, active = false, items = [], mouseX = 0, mouseY = 0;
+        let audioContext;
+        let width, height, score = 0, active = false, items = [], mouseX = 0, mouseY = 0;
 
         function resize() { 
             width = canvas.width = window.innerWidth; 
@@ -136,24 +140,10 @@
             if (audioContext.state === 'suspended') await audioContext.resume();
         }
 
-        // --- CONTROL LOGIC (Mobile + Desktop) ---
-        function handleMove(clientX) {
-            mouseX = clientX;
-            if (active) {
-                basket.style.left = clientX + 'px';
-            }
-        }
-
-        window.addEventListener('mousemove', (e) => handleMove(e.clientX));
-        window.addEventListener('touchmove', (e) => {
-            handleMove(e.touches[0].clientX);
-            if(active) e.preventDefault();
-        }, { passive: false });
-
         async function begin() {
             await initAudio();
             document.getElementById('start-screen').style.display = 'none';
-            gameSfx.play().catch(()=>{});
+            gameSfx.play().catch(e => console.log("Audio blocked"));
             document.getElementById('hud').style.opacity = '1';
             basket.style.opacity = '1';
             active = true;
@@ -165,17 +155,25 @@
                 this.x = Math.random() * width; 
                 this.y = -60; 
                 this.speed = Math.random() * 2 + 3;
-                this.emoji = Math.random() > 0.4 ? '🌹' : '🤍';
-                this.type = this.emoji === '🌹' ? 'good' : 'bad';
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.1;
+                const r = Math.random(); 
+                this.emoji = r > 0.45 ? '🌹' : '🤍';
+                this.type = r > 0.45 ? 'good' : 'bad';
             }
             update() {
                 this.y += this.speed;
+                this.rotation += this.rotSpeed;
+                this.x += Math.sin(this.y / 50) * 1.5;
+
                 let bx = basket.offsetLeft;
-                if (this.y > height - 140 && this.y < height - 60 && this.x > bx - 60 && this.x < bx + 60) {
+                if (this.y > height - 120 && this.y < height - 40 && this.x > bx - 60 && this.x < bx + 60) {
                     if (this.type === 'good') { 
                         score++; 
-                        document.getElementById('yay').currentTime = 0;
                         document.getElementById('yay').play().catch(()=>{});
+                        scoreWrap.classList.remove('score-pop');
+                        void scoreWrap.offsetWidth;
+                        scoreWrap.classList.add('score-pop');
                     } else { 
                         score = Math.max(0, score - 1); 
                         document.getElementById('neh').play().catch(()=>{});
@@ -189,17 +187,12 @@
                 return this.y < height + 60;
             }
             draw() { 
-                ctx.font = '40px serif';
-                ctx.fillText(this.emoji, this.x - 20, this.y);
-            }
-        }
-
-        function loop() {
-            ctx.clearRect(0, 0, width, height);
-            if (active) {
-                if (Math.random() < 0.05) items.push(new Drop());
-                items = items.filter(it => { it.draw(); return it.update(); });
-                requestAnimationFrame(loop);
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.font = '40px serif'; 
+                ctx.fillText(this.emoji, -20, 20);
+                ctx.restore();
             }
         }
 
@@ -211,12 +204,25 @@
             setTimeout(() => { document.getElementById('reveal-screen').style.display = 'flex'; }, 800); 
         }
 
-        // --- THREE.JS SECTION ---
-        let scene, camera, renderer, roseGroups = [], stars;
+        // CONTROL HANDLERS (Mouse + Touch)
+        function handleMove(e) {
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            mouseX = clientX; mouseY = clientY;
+            if (active) {
+                const targetX = clientX;
+                const currentX = parseFloat(basket.style.left) || width/2;
+                basket.style.left = targetX + 'px';
+                basket.style.transform = `translateX(-50%) rotate(${(targetX - currentX) * 0.5}deg)`;
+            }
+        }
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('touchmove', handleMove, { passive: false });
 
+        // THREE JS LOGIC
+        let scene, camera, renderer, roseGroups = [], butterflies = [], stars;
         function initThree() {
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x0a0510, 0.04);
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -235,36 +241,45 @@
 
             for(let i=0; i<100; i++) {
                 const group = new THREE.Group();
-                const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 4), new THREE.MeshBasicMaterial({color: 0x1a4a1a}));
-                group.add(stem);
+                const stemH = Math.random() * 3 + 2;
                 const head = new THREE.Sprite(new THREE.SpriteMaterial({map: roseTex}));
-                head.position.y = 2.2; head.scale.set(1.5, 1.5, 1);
+                head.position.y = stemH; head.scale.set(1.5, 1.5, 1);
                 group.add(head);
                 group.position.set((Math.random()-0.5)*40, -10, (Math.random()-0.5)*30 - 10);
                 scene.add(group);
-                roseGroups.push({obj: group, targetY: -2, phase: Math.random()*10});
+                roseGroups.push({obj: group, targetY: -4, phase: Math.random() * 10});
             }
-            camera.position.z = 15;
+            camera.position.set(0, 5, 15);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
         }
 
         async function bloom() {
             await initAudio();
-            winSong.play().catch(()=>{});
+            winSong.play();
             document.getElementById('reveal-screen').style.display = 'none';
             document.getElementById('three-container').style.display = 'block';
             initThree();
             animateThree();
-            setTimeout(() => { document.getElementById('final-card').classList.add('show'); }, 4000);
+            setTimeout(() => { document.getElementById('final-card').classList.add('show'); }, 3000);
         }
 
         function animateThree() {
             requestAnimationFrame(animateThree);
+            stars.rotation.y += 0.001;
             roseGroups.forEach(r => {
                 if(r.obj.position.y < r.targetY) r.obj.position.y += 0.05;
-                r.obj.rotation.z = Math.sin(Date.now()*0.001 + r.phase)*0.1;
+                r.obj.rotation.z = Math.sin(Date.now() * 0.001 + r.phase) * 0.1;
             });
-            stars.rotation.y += 0.001;
             renderer.render(scene, camera);
+        }
+
+        function loop() {
+            ctx.clearRect(0, 0, width, height);
+            if (active) {
+                if (Math.random() < 0.05) items.push(new Drop());
+                items = items.filter(it => { it.draw(); return it.update(); });
+                requestAnimationFrame(loop);
+            }
         }
     </script>
 </body>
