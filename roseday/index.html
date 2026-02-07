@@ -42,14 +42,29 @@
 
         /* Adjusted for Mobile Viewability */
         .final-card {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            background: rgba(15, 7, 32, 0.6); backdrop-filter: blur(25px);
-            padding: 2rem; border-radius: 2.5rem; border: 1px solid rgba(251, 191, 36, 0.3);
-            text-align: center; opacity: 0; transition: all 3s ease-out; z-index: 2000; pointer-events: none;
-            box-shadow: 0 0 120px rgba(244, 63, 94, 0.2);
-            width: 85%; max-width: 450px;
+            position: fixed; 
+            bottom: 5%; /* Anchors it to the bottom of the screen */
+            left: 50%; 
+            transform: translateX(-50%) scale(0.8); /* Centers horizontally only */
+            background: rgba(15, 7, 32, 0.2); /* Very transparent */
+            backdrop-filter: blur(8px); 
+            padding: 1.2rem; 
+            border-radius: 2rem; 
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            text-align: center; 
+            opacity: 0; 
+            transition: all 2s ease-out; 
+            z-index: 2000; 
+            pointer-events: none;
+            width: 85%; 
+            max-width: 320px;
         }
-        .final-card.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        
+        /* When the card shows, it pops up slightly */
+        .final-card.show { 
+            opacity: 1; 
+            transform: translateX(-50%) translateY(-10px) scale(0.9); 
+        }
 
         .user-pic { 
             width: 140px; height: 140px; object-fit: cover; border-radius: 50%; 
@@ -73,23 +88,23 @@
     <audio id="gameSfx" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
     <audio id="winSong" loop preload="auto"><source src="song.mp3" type="audio/mpeg"></audio>
     <audio id="yay" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="neh" preload="auto"><source src="https://gfxsounds.com/wp-content/uploads/2023/03/Beep-error.mp3" type="audio/mpeg"></audio>
+    <audio id="neh" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" type="audio/mpeg"></audio>
 
     <div id="start-screen">
         <h1 class="cursive text-7xl md:text-8xl text-rose-200 mb-8 drop-shadow-lg text-center px-4">Dipin's Garden</h1>
-        <p class="text-rose-300 mb-10 tracking-widest uppercase text-sm">A Little Surprise For You</p>
+        <p class="text-rose-300 mb-10 tracking-widest uppercase text-sm">A Little Surprise For You Kanxi</p>
         <button onclick="begin()" class="cursive text-3xl text-white bg-gradient-to-r from-rose-600 to-rose-400 px-12 py-4 rounded-full hover:scale-110 transition-all">Enter Garden</button>
     </div>
 
     <div id="reveal-screen" style="display:none;">
-        <h2 class="cursive text-5xl md:text-6xl text-white mb-10 text-center px-4">You've caught my heart.</h2>
+        <h2 class="cursive text-5xl md:text-6xl text-white mb-10 text-center px-4">You've caught my heart Sanu.</h2>
         <button onclick="bloom()" class="cursive text-4xl md:text-5xl text-white bg-gradient-to-r from-amber-600 to-yellow-500 px-16 py-6 rounded-full animate-bounce shadow-2xl">Reveal The Garden</button>
     </div>
 
     <div id="hud">
         <div class="text-rose-100 text-5xl cursive mb-2" id="score-wrapper"><span id="score">0</span> / 20</div>
         <div class="bar-bg"><div id="bar-fill"></div></div>
-        <p class="text-rose-300 text-xs uppercase tracking-[0.3em]">Collect Roses to Bloom</p>
+        <p class="text-rose-300 text-xs uppercase tracking-[0.3em]">Collect Roses to Bloom Dallu</p>
     </div>
 
     <div id="basket">🧺</div>
@@ -126,9 +141,26 @@
         }
 
         async function begin() {
-            await initAudio();
+            // 1. "Warm up" all audio for Mobile
+            const allSounds = [
+                document.getElementById('gameSfx'),
+                document.getElementById('winSong'),
+                document.getElementById('yay'),
+                document.getElementById('neh')
+            ];
+        
+            allSounds.forEach(sound => {
+                sound.play().then(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }).catch(e => console.log("Audio warm-up failed:", e));
+            });
+        
+            // 2. Start the actual background music
+            document.getElementById('gameSfx').play();
+        
+            // 3. Start the game
             document.getElementById('start-screen').style.display = 'none';
-            gameSfx.play().catch(e => console.log("Audio play blocked"));
             document.getElementById('hud').style.opacity = '1';
             basket.style.opacity = '1';
             active = true;
@@ -139,7 +171,7 @@
             constructor() {
                 this.x = Math.random() * width; 
                 this.y = -60; 
-                this.speed = Math.random() * 2 + 4;
+                this.speed = Math.random() * 2 + 2;
                 this.rotation = Math.random() * Math.PI * 2;
                 this.rotSpeed = (Math.random() - 0.5) * 0.1;
                 const r = Math.random(); 
