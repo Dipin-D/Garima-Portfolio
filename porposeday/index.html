@@ -20,45 +20,21 @@
 
         .cursive { font-family: 'Dancing Script', cursive; }
 
-        /* SPECIAL VIDEO BACKGROUND */
+        /* Special Video Halo */
         #video-container {
             display: none; position: fixed; inset: 0; z-index: 5000; 
             background: radial-gradient(circle at center, #2e1052 0%, #050208 100%); 
             flex-direction: column; align-items: center; justify-content: center;
         }
-
-        .video-wrapper {
-            position: relative;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* The Glowing Halo around the video */
+        .video-wrapper { position: relative; padding: 10px; display: flex; justify-content: center; align-items: center; }
         .video-wrapper::before {
-            content: '';
-            position: absolute;
-            inset: -15px;
+            content: ''; position: absolute; inset: -15px;
             background: linear-gradient(45deg, #fbbf24, #ec4899, #8b5cf6, #fbbf24);
-            filter: blur(30px);
-            border-radius: 40px;
-            opacity: 0.6;
-            animation: rotateGlow 6s linear infinite;
+            filter: blur(30px); border-radius: 40px; opacity: 0.6; animation: rotateGlow 6s linear infinite;
         }
+        @keyframes rotateGlow { 0% { filter: blur(30px) hue-rotate(0deg); } 100% { filter: blur(30px) hue-rotate(360deg); } }
 
-        @keyframes rotateGlow {
-            0% { filter: blur(30px) hue-rotate(0deg); }
-            100% { filter: blur(30px) hue-rotate(360deg); }
-        }
-
-        video {
-            position: relative;
-            width: 85vw; max-width: 380px; 
-            border: 2px solid rgba(251, 191, 36, 0.8); 
-            border-radius: 30px;
-            z-index: 1;
-        }
+        video { position: relative; width: 85vw; max-width: 380px; border: 2px solid rgba(251, 191, 36, 0.8); border-radius: 30px; z-index: 1; background: black; }
 
         #ring-trigger {
             display: none; position: fixed; top: 50%; left: 50%; 
@@ -66,20 +42,19 @@
             cursor: pointer; filter: drop-shadow(0 0 30px #fbbf24);
             animation: cosmicPulse 3s infinite ease-in-out;
         }
-
-        @keyframes cosmicPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 20px #fbbf24); }
-            50% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 50px #f59e0b); }
-        }
+        @keyframes cosmicPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.15); } }
 
         .final-card {
             position: fixed; top: 6%; left: 50%; transform: translate(-50%, -20px) scale(0.8);
             background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
             padding: 1.5rem; border-radius: 2.5rem; border: 1px solid rgba(255,255,255,0.1);
-            text-align: center; opacity: 0; transition: all 3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; pointer-events: none;
+            text-align: center; opacity: 0; transition: all 3s ease-out; z-index: 2000; pointer-events: none;
             width: 88%; max-width: 350px;
         }
         .final-card.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+        /* Loading States */
+        #entry-btn:disabled { opacity: 0.6; cursor: wait; border-color: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -87,18 +62,19 @@
     <audio id="cosmicAudio" loop preload="auto"><source src="audio.mp3" type="audio/mpeg"></audio>
 
     <div id="start-screen">
-        <div class="mb-6 opacity-80 text-4xl">✨</div>
+        <div id="loader-icon" class="mb-6 text-4xl animate-spin">⌛</div>
         <h1 class="cursive text-6xl text-amber-200 mb-8 text-center px-4">A Cosmic Promise</h1>
-        <button onclick="begin()" class="cursive text-2xl text-white border-2 border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/30 px-10 py-3 rounded-full transition-all">Explore the Universe</button>
+        <button id="entry-btn" disabled onclick="begin()" class="cursive text-2xl text-white border-2 border-amber-500/50 bg-amber-500/10 px-10 py-3 rounded-full transition-all">
+            Preparing Universe...
+        </button>
+        <p id="load-status" class="mt-4 text-xs tracking-widest uppercase opacity-40">Loading Video (0%)</p>
     </div>
 
     <div id="ring-trigger">💍</div>
 
     <div id="video-container">
         <div class="video-wrapper">
-            <video id="propose-video" playsinline preload="auto">
-                <source src="propose_video.mp4" type="video/mp4">
-            </video>
+            <video id="propose-video" src="propose_video.mp4" playsinline preload="auto" muted></video>
         </div>
         <button onclick="closeVideo()" class="mt-12 text-xs tracking-widest uppercase opacity-70 border-b border-white pb-1">Tap to Return</button>
     </div>
@@ -116,12 +92,36 @@
         let scene, camera, renderer, hearts = [], stars, mouseX = 0, mouseY = 0;
         const cosmicAudio = document.getElementById('cosmicAudio');
         const video = document.getElementById('propose-video');
+        const btn = document.getElementById('entry-btn');
+        const statusText = document.getElementById('load-status');
+        const loaderIcon = document.getElementById('loader-icon');
+
+        // --- PRELOAD LOGIC ---
+        // Check progress of video download
+        video.addEventListener('progress', () => {
+            if (video.duration > 0) {
+                const percent = Math.round((video.buffered.end(0) / video.duration) * 100);
+                statusText.innerText = `Loading Video (${percent}%)`;
+                if (percent > 80) enableButton(); // Enable when 80% is ready
+            }
+        });
+
+        // Backup: Enable button if it can play through even if not 100% loaded
+        video.oncanplaythrough = () => enableButton();
+
+        function enableButton() {
+            btn.disabled = false;
+            btn.innerText = "Enter My Heart";
+            btn.classList.add('bg-amber-500/20', 'border-amber-400');
+            statusText.innerText = "Ready for You ✨";
+            loaderIcon.innerText = "✨";
+            loaderIcon.classList.remove('animate-spin');
+        }
 
         async function begin() {
-            // Pre-poke the video for 15MB loading
-            video.load(); 
-            
-            cosmicAudio.play().then(() => { cosmicAudio.volume = 1.0; }).catch(e => {});
+            // "Poke" the video to unlock audio context on mobile
+            video.play().then(() => { video.pause(); video.muted = false; }).catch(e => {});
+            cosmicAudio.play().catch(e => {});
             
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('three-container').style.display = 'block';
@@ -140,7 +140,9 @@
             document.getElementById('ring-trigger').style.display = 'none';
             document.getElementById('video-container').style.display = 'flex';
             cosmicAudio.volume = 0.15;
-            video.play();
+            video.currentTime = 0;
+            video.muted = false;
+            video.play().catch(e => { video.controls = true; });
         }
 
         function closeVideo() {
@@ -150,6 +152,7 @@
             document.getElementById('final-card').classList.add('show');
         }
 
+        // --- THREE JS ENGINE ---
         function initThree() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -180,8 +183,7 @@
             }
 
             const light = new THREE.PointLight(0x7e22ce, 10, 100);
-            light.position.set(0, 0, -20);
-            scene.add(light);
+            light.position.set(0, 0, -20); scene.add(light);
             scene.add(new THREE.AmbientLight(0x404040));
             camera.position.z = 30;
         }
@@ -192,8 +194,7 @@
             camera.position.y += ( -(mouseY / window.innerHeight - 0.5) * 20 - camera.position.y ) * 0.02;
             camera.lookAt(scene.position);
             hearts.forEach(h => {
-                h.obj.position.z += h.speed * 9;
-                h.obj.position.x += Math.sin(Date.now() * 0.001 + h.angle) * 0.02;
+                h.obj.position.z += h.speed * 15;
                 if(h.obj.position.z > 30) h.obj.position.z = -70;
             });
             stars.rotation.y += 0.0003;
