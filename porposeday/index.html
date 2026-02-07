@@ -20,12 +20,12 @@
 
         .cursive { font-family: 'Dancing Script', cursive; }
 
-        /* Special Video Halo */
         #video-container {
             display: none; position: fixed; inset: 0; z-index: 5000; 
             background: radial-gradient(circle at center, #2e1052 0%, #050208 100%); 
             flex-direction: column; align-items: center; justify-content: center;
         }
+
         .video-wrapper { position: relative; padding: 10px; display: flex; justify-content: center; align-items: center; }
         .video-wrapper::before {
             content: ''; position: absolute; inset: -15px;
@@ -52,9 +52,6 @@
             width: 88%; max-width: 350px;
         }
         .final-card.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
-
-        /* Loading States */
-        #entry-btn:disabled { opacity: 0.6; cursor: wait; border-color: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -62,12 +59,12 @@
     <audio id="cosmicAudio" loop preload="auto"><source src="audio.mp3" type="audio/mpeg"></audio>
 
     <div id="start-screen">
-        <div id="loader-icon" class="mb-6 text-4xl animate-spin">⌛</div>
+        <div class="mb-6 text-4xl">✨</div>
         <h1 class="cursive text-6xl text-amber-200 mb-8 text-center px-4">A Cosmic Promise</h1>
-        <button id="entry-btn" disabled onclick="begin()" class="cursive text-2xl text-white border-2 border-amber-500/50 bg-amber-500/10 px-10 py-3 rounded-full transition-all">
-            Preparing Universe...
+        <button id="entry-btn" onclick="begin()" class="cursive text-2xl text-white border-2 border-amber-500/50 bg-amber-500/10 px-10 py-3 rounded-full transition-all">
+            Enter My Heart
         </button>
-        <p id="load-status" class="mt-4 text-xs tracking-widest uppercase opacity-40">Loading Video (0%)</p>
+        <p class="mt-4 text-xs tracking-widest uppercase opacity-40">Best with Sound On</p>
     </div>
 
     <div id="ring-trigger">💍</div>
@@ -92,35 +89,15 @@
         let scene, camera, renderer, hearts = [], stars, mouseX = 0, mouseY = 0;
         const cosmicAudio = document.getElementById('cosmicAudio');
         const video = document.getElementById('propose-video');
-        const btn = document.getElementById('entry-btn');
-        const statusText = document.getElementById('load-status');
-        const loaderIcon = document.getElementById('loader-icon');
-
-        // --- PRELOAD LOGIC ---
-        // Check progress of video download
-        video.addEventListener('progress', () => {
-            if (video.duration > 0) {
-                const percent = Math.round((video.buffered.end(0) / video.duration) * 100);
-                statusText.innerText = `Loading Video (${percent}%)`;
-                if (percent > 80) enableButton(); // Enable when 80% is ready
-            }
-        });
-
-        // Backup: Enable button if it can play through even if not 100% loaded
-        video.oncanplaythrough = () => enableButton();
-
-        function enableButton() {
-            btn.disabled = false;
-            btn.innerText = "Enter My Heart";
-            btn.classList.add('bg-amber-500/20', 'border-amber-400');
-            statusText.innerText = "Ready for You ✨";
-            loaderIcon.innerText = "✨";
-            loaderIcon.classList.remove('animate-spin');
-        }
 
         async function begin() {
-            // "Poke" the video to unlock audio context on mobile
-            video.play().then(() => { video.pause(); video.muted = false; }).catch(e => {});
+            // Trigger video pre-load on interaction
+            video.load(); 
+            video.play().then(() => { 
+                video.pause(); 
+                video.muted = false; 
+            }).catch(e => {});
+
             cosmicAudio.play().catch(e => {});
             
             document.getElementById('start-screen').style.display = 'none';
@@ -129,20 +106,28 @@
             initThree();
             animateThree();
 
+            // Reveal the Ring after 6 seconds of travel to ensure 17MB buffers
             setTimeout(() => {
                 const ring = document.getElementById('ring-trigger');
                 ring.style.display = 'block';
                 ring.onclick = startProposal;
-            }, 5000);
+            }, 6000);
         }
 
         function startProposal() {
             document.getElementById('ring-trigger').style.display = 'none';
             document.getElementById('video-container').style.display = 'flex';
+            
             cosmicAudio.volume = 0.15;
             video.currentTime = 0;
             video.muted = false;
-            video.play().catch(e => { video.controls = true; });
+            
+            const promise = video.play();
+            if (promise !== undefined) {
+                promise.catch(error => {
+                    video.controls = true; // Final fallback
+                });
+            }
         }
 
         function closeVideo() {
@@ -152,7 +137,6 @@
             document.getElementById('final-card').classList.add('show');
         }
 
-        // --- THREE JS ENGINE ---
         function initThree() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -194,7 +178,7 @@
             camera.position.y += ( -(mouseY / window.innerHeight - 0.5) * 20 - camera.position.y ) * 0.02;
             camera.lookAt(scene.position);
             hearts.forEach(h => {
-                h.obj.position.z += h.speed * 15;
+                h.obj.position.z += h.speed * 5;
                 if(h.obj.position.z > 30) h.obj.position.z = -70;
             });
             stars.rotation.y += 0.0003;
