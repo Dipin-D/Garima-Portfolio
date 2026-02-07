@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dipin's Cosmic Proposal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;600&display=swap');
+        
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #050208; color: white; font-family: 'Plus Jakarta Sans', sans-serif; touch-action: none; }
+        #three-container { position: fixed; inset: 0; display: none; z-index: 10; }
+        
+        #start-screen { 
+            position: fixed; inset: 0; z-index: 1000; 
+            background: radial-gradient(circle at center, #1e0b36 0%, #050208 100%);
+            display: flex; flex-direction: column; items: center; justify-content: center; 
+        }
+
+        .cursive { font-family: 'Dancing Script', cursive; }
+
+        #video-container {
+            display: none; position: fixed; inset: 0; z-index: 5000; 
+            background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center;
+        }
+        video {
+            width: 85%; max-width: 380px; border: 2px solid #fbbf24; border-radius: 30px;
+            box-shadow: 0 0 60px rgba(251,191,36,0.4);
+        }
+
+        #ring-trigger {
+            display: none; position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); z-index: 100; font-size: 6rem; 
+            cursor: pointer; filter: drop-shadow(0 0 30px #fbbf24);
+            animation: cosmicPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes cosmicPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 20px #fbbf24); }
+            50% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 50px #f59e0b); }
+        }
+
+        .final-card {
+            position: fixed; top: 6%; left: 50%; transform: translate(-50%, -20px) scale(0.8);
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            padding: 1.5rem; border-radius: 2.5rem; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; opacity: 0; transition: all 3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; pointer-events: none;
+            width: 88%; max-width: 350px;
+        }
+        .final-card.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    </style>
+</head>
+<body>
+
+    <audio id="cosmicAudio" loop preload="auto"><source src="audio.mp3" type="audio/mpeg"></audio>
+
+    <div id="start-screen">
+        <div class="mb-6 opacity-80 text-4xl">✨</div>
+        <h1 class="cursive text-6xl text-amber-200 mb-8 text-center px-4">A Cosmic Promise</h1>
+        <button onclick="begin()" class="cursive text-2xl text-white border-2 border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/30 px-10 py-3 rounded-full transition-all">Explore the Universe</button>
+    </div>
+
+    <div id="ring-trigger">💍</div>
+
+    <div id="video-container">
+        <video id="propose-video" playsinline>
+            <source src="propose_video.mp4" type="video/mp4">
+        </video>
+        <button onclick="closeVideo()" class="mt-10 text-xs tracking-widest uppercase opacity-60 border-b border-white">Tap to Return</button>
+    </div>
+
+    <div id="three-container"></div>
+
+    <div id="final-card" class="final-card">
+        <h1 class="cursive text-3xl text-amber-100">Forever & Always</h1>
+        <p class="text-white/80 text-xs mt-3 leading-relaxed tracking-wide">
+            "Will you marry me? Ta vanisake...<br>so will you love the way you used to?"
+        </p>
+    </div>
+
+    <script>
+        let scene, camera, renderer, hearts = [], stars, mouseX = 0, mouseY = 0;
+        const cosmicAudio = document.getElementById('cosmicAudio');
+        const video = document.getElementById('propose-video');
+
+        async function begin() {
+            // Unlocks audio for mobile by playing and immediately pausing
+            cosmicAudio.play().then(() => {
+                // Keep it playing as the background music
+                cosmicAudio.volume = 1.0;
+            }).catch(e => console.log("Audio unlock failed", e));
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('three-container').style.display = 'block';
+            
+            initThree();
+            animateThree();
+
+            // Reveal the Ring after 5 seconds of cosmic travel
+            setTimeout(() => {
+                const ring = document.getElementById('ring-trigger');
+                ring.style.display = 'block';
+                ring.onclick = startProposal;
+            }, 5000);
+        }
+
+        function startProposal() {
+            document.getElementById('ring-trigger').style.display = 'none';
+            document.getElementById('video-container').style.display = 'flex';
+            cosmicAudio.volume = 0.15; // Duck the music for the video
+            video.play();
+        }
+
+        function closeVideo() {
+            document.getElementById('video-container').style.display = 'none';
+            video.pause();
+            cosmicAudio.volume = 1.0; // Bring music back up
+            document.getElementById('final-card').classList.add('show');
+        }
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x050208);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+
+            // Stars
+            const starGeo = new THREE.BufferGeometry();
+            const starCoords = [];
+            for(let i=0; i<2000; i++) starCoords.push((Math.random()-0.5)*200, (Math.random()-0.5)*200, (Math.random()-0.5)*200);
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+            stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.15, transparent: true, opacity: 0.8}));
+            scene.add(stars);
+
+            // Floating Hearts
+            const heartCanvas = document.createElement('canvas'); heartCanvas.width = 64; heartCanvas.height = 64;
+            const hCtx = heartCanvas.getContext('2d'); hCtx.font = '50px serif'; hCtx.fillText('💖', 5, 50);
+            const heartTex = new THREE.CanvasTexture(heartCanvas);
+
+            for(let i=0; i<120; i++) {
+                const material = new THREE.SpriteMaterial({ map: heartTex, transparent: true, opacity: Math.random() * 0.5 + 0.5 });
+                const sprite = new THREE.Sprite(material);
+                const scale = Math.random() * 1.5 + 0.5;
+                sprite.scale.set(scale, scale, 1);
+                sprite.position.set((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100);
+                scene.add(sprite);
+                hearts.push({
+                    obj: sprite, 
+                    speed: Math.random() * 0.02 + 0.01,
+                    angle: Math.random() * Math.PI * 2
+                });
+            }
+
+            const light = new THREE.PointLight(0x7e22ce, 10, 100);
+            light.position.set(0, 0, -20);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+            camera.position.z = 30;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            camera.position.x += ( (mouseX / window.innerWidth - 0.5) * 20 - camera.position.x ) * 0.02;
+            camera.position.y += ( -(mouseY / window.innerHeight - 0.5) * 20 - camera.position.y ) * 0.02;
+            camera.lookAt(scene.position);
+            hearts.forEach(h => {
+                h.obj.position.z += h.speed * 5;
+                h.obj.position.x += Math.sin(Date.now() * 0.001 + h.angle) * 0.02;
+                if(h.obj.position.z > 30) h.obj.position.z = -70;
+            });
+            stars.rotation.y += 0.0003;
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('touchmove', (e) => { 
+            mouseX = e.touches[0].clientX; 
+            mouseY = e.touches[0].clientY; 
+        }, { passive: false });
+        window.addEventListener('mousemove', (e) => { 
+            mouseX = e.clientX; 
+            mouseY = e.clientY; 
+        });
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
