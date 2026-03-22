@@ -3,409 +3,1311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garima Poudel | RN </title>
-    <link rel="icon" type="image/jpeg" href="images/portfolio.jpeg">
-    <meta name="title" content="Garima Poudel | Registered Nurse Portfolio">
-    <meta name="description" content="New Grad Registered Nurse">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://garimapoudel.com.np/">
-    <meta property="og:title" content="Garima Poudel | RN Portfolio">
-    <meta property="og:description" content="Explore my clinical experience">
-    <meta property="og:image" content="https://garimapoudel.com.np/images/portfolio.jpeg">    
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Garima Poudel | RN Portfolio">
-    <meta property="twitter:description" content="Registered Nurse Portfolio - Clinical Experience & Skills.">
-    <meta property="twitter:image" content="https://garimapoudel.com.np/images/portfolio.jpeg">
+    <title>Garima Poudel | RN Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus+Jakarta+Sans', sans-serif; overflow-x: hidden; }
-        .transition-all { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .night-shift { background: #020617 !important; color: #f8fafc !important; }
-        .glass { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-        
-        /* Optimized Animations */
-        @keyframes dash { to { stroke-dashoffset: 0; } }
-        .ekg-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 3s linear infinite; }
-        
-        @keyframes heartPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.2); }
-            50% { transform: scale(1.02); box-shadow: 0 0 40px 10px rgba(14, 165, 233, 0.1); }
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #f7fbff;
+            --bg-dark: #08111f;
+            --surface: rgba(255, 255, 255, 0.72);
+            --surface-dark: rgba(8, 17, 31, 0.72);
+            --line: rgba(14, 165, 233, 0.16);
+            --line-dark: rgba(148, 163, 184, 0.18);
+            --text: #0f172a;
+            --text-dark: #e2e8f0;
+            --muted: #475569;
+            --muted-dark: #94a3b8;
+            --accent: #0284c7;
+            --accent-soft: #e0f2fe;
         }
-        .heart-active { animation: heartPulse 3s ease-in-out infinite; }
 
-        #mainImgFrame { transform-style: preserve-3d; will-change: transform; }
-        
-        /* Custom Cursor */
-        #custom-cursor { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 9999; }
-        .cursor-dot { width: 8px; height: 8px; background-color: #0ea5e9; border-radius: 50%; opacity: 0.7; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, width 0.3s ease-out, height 0.3s ease-out; }
-        .cursor-ring { width: 30px; height: 30px; border: 2px solid #0ea5e9; border-radius: 50%; opacity: 0.3; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, width 0.3s ease-out, height 0.3s ease-out; }
-        .cursor-plus .cursor-dot { width: 2px; height: 16px; border-radius: 0; transform: translate(-50%, -50%) rotate(90deg); background-color: #0ea5e9; }
-        .cursor-plus .cursor-dot::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background-color: #0ea5e9; transform: translateY(-50%) rotate(-90deg); }
-        .cursor-plus .cursor-ring { width: 40px; height: 40px; border: 3px solid #0ea5e9; opacity: 0.5; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
 
+        h1, h2, h3, .display-font { font-family: 'Cormorant Garamond', serif; }
 
-        /* Scroll Progress */
-        #scrollProgress { position: fixed; top: 0; left: 0; height: 3px; background: #0ea5e9; z-index: 200; width: 0%; transition: width 0.1s linear; }
+        .glass {
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
 
-        /* Confetti Canvas */
-        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1000; }
+        .page-shell {
+            position: relative;
+            min-height: 100vh;
+            isolation: isolate;
+            --mx: 0px;
+            --my: 0px;
+        }
 
-        /* Floating Action Button */
-        #fab { position: fixed; bottom: 30px; right: 30px; z-index: 150; }
-        .fab-button { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; }
-        .fab-button:hover { background: rgba(14, 165, 233, 0.8); border-color: #0ea5e9; transform: translateY(-5px); }
-        .fab-button svg { color: #0ea5e9; transition: color 0.3s ease; }
-        .fab-button:hover svg { color: white; }
+        .page-shell::before,
+        .page-shell::after {
+            content: "";
+            position: fixed;
+            inset: auto;
+            border-radius: 999px;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: -2;
+            transition: opacity 0.5s ease, background 0.5s ease;
+        }
+
+        .page-shell::before {
+            width: 28rem;
+            height: 28rem;
+            top: 4rem;
+            left: -8rem;
+            background: rgba(14, 165, 233, 0.18);
+        }
+
+        .page-shell::after {
+            width: 34rem;
+            height: 34rem;
+            right: -10rem;
+            bottom: 5rem;
+            background: rgba(56, 189, 248, 0.14);
+        }
+
+        .page-shell::selection {
+            background: rgba(14, 165, 233, 0.18);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(2, 132, 199, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(2, 132, 199, 0.07) 1px, transparent 1px);
+            background-size: 52px 52px;
+            mask-image: radial-gradient(circle at center, black 45%, transparent 90%);
+        }
+
+        .canvas-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: -4;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 12% 12%, rgba(56, 189, 248, 0.34), transparent 24%),
+                radial-gradient(circle at 82% 14%, rgba(186, 230, 253, 0.36), transparent 22%),
+                radial-gradient(circle at 88% 82%, rgba(14, 165, 233, 0.18), transparent 26%),
+                conic-gradient(from 220deg at 50% 50%, rgba(255, 255, 255, 0.7), rgba(224, 242, 254, 0.16), rgba(186, 230, 253, 0.34), rgba(255, 255, 255, 0.72)),
+                linear-gradient(180deg, #fcfeff 0%, #eef7ff 52%, #e6f1fb 100%);
+        }
+
+        .canvas-backdrop::before,
+        .canvas-backdrop::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+        }
+
+        .canvas-backdrop::before {
+            opacity: 0.42;
+            background-image:
+                radial-gradient(rgba(15, 23, 42, 0.08) 0.7px, transparent 0.7px),
+                radial-gradient(rgba(14, 165, 233, 0.08) 0.7px, transparent 0.7px);
+            background-position: 0 0, 18px 18px;
+            background-size: 36px 36px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent 94%);
+        }
+
+        .canvas-backdrop::after {
+            background:
+                linear-gradient(110deg, rgba(255, 255, 255, 0.54), transparent 28%),
+                linear-gradient(290deg, rgba(255, 255, 255, 0.28), transparent 26%),
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.18), transparent 44%);
+            mix-blend-mode: screen;
+            opacity: 0.88;
+        }
+
+        .depth-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            transform-style: preserve-3d;
+        }
+
+        .depth-orb,
+        .depth-ring,
+        .depth-plane {
+            position: absolute;
+            transition: transform 0.18s ease-out;
+            will-change: transform;
+        }
+
+        .depth-orb {
+            border-radius: 999px;
+            filter: blur(6px);
+            opacity: 0.55;
+        }
+
+        .depth-orb.one {
+            width: 24rem;
+            height: 24rem;
+            top: 10%;
+            right: 5%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.58), rgba(14, 165, 233, 0.03) 68%);
+            transform: translate3d(calc(var(--mx) * -0.03), calc(var(--my) * -0.03), 0);
+        }
+
+        .depth-orb.two {
+            width: 16rem;
+            height: 16rem;
+            left: 6%;
+            bottom: 18%;
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.68), rgba(14, 165, 233, 0.02) 72%);
+            transform: translate3d(calc(var(--mx) * 0.04), calc(var(--my) * 0.04), 0);
+        }
+
+        .depth-ring {
+            border-radius: 999px;
+            border: 1px solid rgba(14, 165, 233, 0.18);
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.08);
+        }
+
+        .depth-ring.one {
+            width: 22rem;
+            height: 22rem;
+            left: -2rem;
+            top: 20%;
+            transform: perspective(1200px) rotateX(72deg) rotateY(-8deg) translate3d(calc(var(--mx) * 0.02), calc(var(--my) * 0.02), 0);
+        }
+
+        .depth-ring.two {
+            width: 28rem;
+            height: 28rem;
+            right: -5rem;
+            bottom: 8%;
+            transform: perspective(1200px) rotateX(74deg) rotateY(10deg) translate3d(calc(var(--mx) * -0.025), calc(var(--my) * -0.02), 0);
+        }
+
+        .depth-plane {
+            width: 14rem;
+            height: 8rem;
+            border: 1px solid rgba(255, 255, 255, 0.44);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(224, 242, 254, 0.02));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08);
+            border-radius: 1.75rem;
+        }
+
+        .depth-plane.one {
+            top: 14%;
+            left: 58%;
+            transform: perspective(1200px) rotateX(58deg) rotateZ(-16deg) translate3d(calc(var(--mx) * -0.04), calc(var(--my) * -0.05), 0);
+        }
+
+        .depth-plane.two {
+            bottom: 12%;
+            left: 10%;
+            transform: perspective(1200px) rotateX(60deg) rotateZ(12deg) translate3d(calc(var(--mx) * 0.03), calc(var(--my) * 0.05), 0);
+        }
+
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at top, rgba(125, 211, 252, 0.22), transparent 34%),
+                linear-gradient(180deg, rgba(248, 252, 255, 0.98), rgba(236, 246, 255, 0.96));
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .intro-card {
+            position: relative;
+            z-index: 2;
+            width: min(100%, 42rem);
+            border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background:
+                linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(240, 249, 255, 0.52));
+            box-shadow: 0 28px 90px rgba(15, 23, 42, 0.16);
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .intro-scene-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.95;
+        }
+
+        .intro-orb {
+            position: absolute;
+            border-radius: 999px;
+            pointer-events: none;
+            filter: blur(24px);
+            opacity: 0.8;
+            mix-blend-mode: screen;
+        }
+
+        .intro-orb.one {
+            z-index: 0;
+            width: 22rem;
+            height: 22rem;
+            top: 8%;
+            left: 8%;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.28), rgba(14, 165, 233, 0.02) 70%);
+        }
+
+        .intro-orb.two {
+            z-index: 0;
+            width: 26rem;
+            height: 26rem;
+            right: 4%;
+            bottom: 2%;
+            background: radial-gradient(circle, rgba(125, 211, 252, 0.46), rgba(255, 255, 255, 0.02) 70%);
+        }
+
+        .intro-ring {
+            position: absolute;
+            z-index: 1;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.08);
+            pointer-events: none;
+        }
+
+        .intro-ring.one {
+            width: 34rem;
+            height: 34rem;
+            top: -8rem;
+            right: -6rem;
+            transform: perspective(1200px) rotateX(72deg) rotateZ(18deg);
+        }
+
+        .intro-ring.two {
+            width: 30rem;
+            height: 30rem;
+            bottom: -10rem;
+            left: -6rem;
+            transform: perspective(1200px) rotateX(72deg) rotateZ(-14deg);
+        }
+
+        .intro-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #0f766e;
+        }
+
+        .intro-greeting {
+            min-height: 4.5rem;
+            margin-top: 1.25rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.3rem, 7vw, 4.8rem);
+            line-height: 1;
+            color: #0f172a;
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .intro-name {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #475569;
+        }
+
+        .panel {
+            background:
+                linear-gradient(160deg, rgba(255, 255, 255, 0.84), rgba(239, 248, 255, 0.62));
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow:
+                0 28px 80px rgba(15, 23, 42, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.65);
+            transition: transform 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-6px);
+            border-color: rgba(2, 132, 199, 0.34);
+        }
+
+        .image-shell {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(224, 242, 254, 0.95), rgba(241, 245, 249, 0.82)),
+                radial-gradient(circle at top, rgba(14, 165, 233, 0.18), transparent 42%);
+        }
+
+        .image-shell::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 30%;
+            background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.12));
+            pointer-events: none;
+        }
+
+        .hero-portrait {
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            object-position: center 22%;
+            transform: scale(1.03);
+        }
+
+        .experience-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .maternity-image {
+            aspect-ratio: 4 / 5;
+            object-position: center 24%;
+        }
+
+        .maternity-image-expanded {
+            aspect-ratio: auto;
+            max-height: 28rem;
+            object-fit: contain;
+            object-position: center top;
+            background: linear-gradient(180deg, rgba(224, 242, 254, 0.6), rgba(241, 245, 249, 0.36));
+        }
+
+        .polio-image {
+            aspect-ratio: 4 / 5;
+            object-position: center 36%;
+        }
+
+        .community-image {
+            aspect-ratio: 4 / 5;
+            object-position: center center;
+        }
+
+        .accent-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.45), transparent);
+        }
+
+        .stat-pill {
+            background:
+                linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(224, 242, 254, 0.72));
+            border: 1px solid rgba(2, 132, 199, 0.16);
+            box-shadow: 0 16px 40px rgba(14, 165, 233, 0.08);
+        }
+
+        .timeline-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: linear-gradient(180deg, #38bdf8, #0f172a);
+            opacity: 0.8;
+        }
+
+        .experience-card-grid {
+            display: grid;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .media-preview {
+            width: min(100%, 13rem);
+        }
+
+        .media-toggle {
+            display: block;
+            width: 100%;
+            border: 0;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .media-toggle:focus-visible {
+            outline: 2px solid rgba(2, 132, 199, 0.5);
+            outline-offset: 8px;
+            border-radius: 1.5rem;
+        }
+
+        .media-preview-label {
+            margin-top: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: #0369a1;
+        }
+
+        .media-preview-label span:last-child {
+            color: #64748b;
+        }
+
+        .expandable-media {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: max-height 0.35s ease, opacity 0.28s ease, transform 0.28s ease;
+        }
+
+        .expandable-media .image-shell {
+            max-width: 26rem;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+        }
+
+        .timeline-card.expanded .expandable-media {
+            max-height: 32rem;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-card.expanded .media-preview-label span:last-child {
+            color: #0284c7;
+        }
+
+        .floating-badge {
+            animation: drift 5s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseLine {
+            0% { stroke-dashoffset: 260; opacity: 0.25; }
+            50% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0.25; }
+        }
+
+        .ekg-line {
+            stroke-dasharray: 260;
+            animation: pulseLine 3.4s linear infinite;
+        }
+
+        .night-shift {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .night-shift .page-shell::before { background: rgba(14, 165, 233, 0.16); }
+        .night-shift .page-shell::after { background: rgba(59, 130, 246, 0.14); }
+        .night-shift .canvas-backdrop {
+            background:
+                radial-gradient(circle at 12% 12%, rgba(14, 165, 233, 0.16), transparent 24%),
+                radial-gradient(circle at 82% 14%, rgba(59, 130, 246, 0.2), transparent 22%),
+                radial-gradient(circle at 88% 82%, rgba(14, 165, 233, 0.1), transparent 26%),
+                conic-gradient(from 220deg at 50% 50%, rgba(8, 17, 31, 0.98), rgba(12, 25, 43, 0.92), rgba(10, 37, 64, 0.9), rgba(8, 17, 31, 0.98)),
+                linear-gradient(180deg, #07111d 0%, #091524 48%, #0b1728 100%);
+        }
+        .night-shift .canvas-backdrop::before {
+            opacity: 0.22;
+            background-image:
+                radial-gradient(rgba(148, 163, 184, 0.14) 0.7px, transparent 0.7px),
+                radial-gradient(rgba(56, 189, 248, 0.08) 0.7px, transparent 0.7px);
+        }
+        .night-shift .canvas-backdrop::after {
+            opacity: 0.28;
+        }
+        .night-shift .grid-overlay {
+            background-image:
+                linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+        }
+        .night-shift .panel,
+        .night-shift .stat-pill {
+            background:
+                linear-gradient(160deg, rgba(8, 17, 31, 0.88), rgba(15, 23, 42, 0.7));
+            border-color: rgba(148, 163, 184, 0.14);
+            box-shadow:
+                0 24px 70px rgba(2, 6, 23, 0.35),
+                inset 0 1px 0 rgba(148, 163, 184, 0.05);
+        }
+        .night-shift .muted,
+        .night-shift .card-text,
+        .night-shift .timeline-meta,
+        .night-shift .section-label {
+            color: var(--muted-dark) !important;
+        }
+        .night-shift .title-dark-toggle { color: var(--text-dark) !important; }
+        .night-shift .nav-shell {
+            background: linear-gradient(180deg, rgba(8, 17, 31, 0.86), rgba(15, 23, 42, 0.76));
+            border-color: rgba(148, 163, 184, 0.14);
+        }
+        .night-shift .hero-frame {
+            border-color: rgba(148, 163, 184, 0.18);
+        }
+        .night-shift .image-shell {
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(12, 18, 30, 0.78)),
+                radial-gradient(circle at top, rgba(14, 165, 233, 0.12), transparent 42%);
+        }
+        .night-shift .timeline-card::before {
+            background: linear-gradient(180deg, #38bdf8, #cbd5e1);
+        }
+        .night-shift .depth-ring {
+            border-color: rgba(148, 163, 184, 0.16);
+            box-shadow: inset 0 0 50px rgba(125, 211, 252, 0.04);
+        }
+        .night-shift .depth-plane {
+            border-color: rgba(148, 163, 184, 0.16);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.24), rgba(14, 165, 233, 0.03));
+            box-shadow: 0 30px 60px rgba(2, 6, 23, 0.18);
+        }
+        .night-shift .intro-screen {
+            background:
+                radial-gradient(circle at top, rgba(14, 165, 233, 0.14), transparent 34%),
+                linear-gradient(180deg, rgba(7, 17, 29, 0.98), rgba(9, 21, 36, 0.96));
+        }
+        .night-shift .intro-card {
+            background: rgba(8, 17, 31, 0.7);
+            border-color: rgba(148, 163, 184, 0.14);
+            box-shadow: 0 28px 90px rgba(2, 6, 23, 0.3);
+        }
+        .night-shift .intro-ring {
+            border-color: rgba(253, 224, 71, 0.12);
+            box-shadow: inset 0 0 40px rgba(56, 189, 248, 0.06);
+        }
+        .night-shift .intro-greeting {
+            color: #e2e8f0;
+        }
+        .night-shift .intro-name {
+            color: #94a3b8;
+        }
+        .night-shift .media-preview-label span:last-child {
+            color: #94a3b8;
+        }
+
+        #scrollProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0;
+            z-index: 200;
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+        }
+
+        @media (min-width: 1024px) {
+            .experience-card-grid {
+                grid-template-columns: 13rem 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-overlay { background-size: 34px 34px; }
+            .depth-plane,
+            .depth-ring.two {
+                display: none;
+            }
+            .intro-ring.one,
+            .intro-ring.two {
+                width: 22rem;
+                height: 22rem;
+            }
+            .media-preview {
+                width: min(100%, 10rem);
+            }
+            .expandable-media .image-shell {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
-<body id="body" class="bg-slate-50 text-slate-900 transition-all">
-<div id="bg-layers" class="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
-    <div class="absolute inset-0 bg-slate-50 transition-colors duration-700" id="mesh-base">
-        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-sky-200/30 blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-sky-100/40 blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
-    </div>
-
-    <div class="absolute inset-0 opacity-[0.15]" 
-         style="background-image: radial-gradient(#0ea5e9 0.5px, transparent 0.5px), linear-gradient(to right, #0ea5e9 0.5px, transparent 0.5px), linear-gradient(to bottom, #0ea5e9 0.5px, transparent 0.5px); 
-                background-size: 40px 40px; background-position: 0 0, 0 0, 0 0;">
-    </div>
-
-    <div class="medical-symbol absolute top-[15%] left-[8%] text-sky-300/40 text-6xl font-light select-none rotate-12">+</div>
-    <div class="medical-symbol absolute top-[60%] left-[90%] text-sky-300/30 text-8xl font-light select-none -rotate-12">+</div>
-    <div class="medical-symbol absolute top-[85%] left-[5%] text-sky-400/20 text-[10rem] font-thin select-none rotate-45">+</div>
-    <div class="medical-symbol absolute top-[40%] left-[80%] text-sky-200/40 text-4xl font-bold select-none">+</div>
-</div>
-
-<style>
-    /* Animation for the floating plus signs */
-    .medical-symbol {
-        animation: floatBackground 8s ease-in-out infinite;
-        transition: color 0.7s ease;
-    }
-    @keyframes floatBackground {
-        0%, 100% { transform: translateY(0) rotate(var(--tw-rotate)); }
-        50% { transform: translateY(-30px) rotate(calc(var(--tw-rotate) + 15deg)); }
-    }
-    
-    /* Ensure night-shift handles the new background layers */
-    .night-shift #mesh-base { background-color: #020617 !important; }
-    .night-shift .medical-symbol { color: rgba(255, 255, 255, 0.05) !important; }
-</style>
-    <div id="scrollProgress"></div>
-    <div id="custom-cursor">
-        <div class="cursor-dot"></div>
-        <div class="cursor-ring"></div>
-    </div>
-    <canvas id="confetti-canvas"></canvas>
-
-    <div id="fab">
-        <a href="mailto:amiragpoudel@gmail.com" class="fab-button group">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-        </a>
-    </div>
-
-    <nav id="nav" class="fixed top-0 w-full z-[100] border-b border-slate-200 bg-white/80 glass transition-all">
-        <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
-            <span id="logo" class="font-black text-2xl tracking-tighter text-sky-600 italic">GP<span class="text-slate-400 not-italic">.</span>RN</span>
-            <div id="navLinks" class="hidden md:flex items-center space-x-10 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
-                <a href="#about" class="hover:text-sky-600 transition interactive">About</a>
-                <a href="#experience" class="hover:text-sky-600 transition interactive">Experience</a>
-                <a href="#education" class="hover:text-sky-600 transition interactive">Education</a>
-            </div>
-            <button onclick="toggleShift(); triggerConfetti(event);" id="shiftBtn" class="bg-slate-900 text-white px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-sky-500 transition-all active:scale-95 interactive">
-                Switch Shift
-            </button>
-        </div>
-    </nav>
-
-    <header id="about" class="pt-48 pb-20 px-8 relative">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-            <div class="animate__animated animate__fadeInLeft">
-                <div class="inline-block px-4 py-1.5 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-[10px] font-black uppercase tracking-widest mb-6">Open to work</div>
-                <h1 id="heroName" class="text-7xl lg:text-9xl font-black tracking-tighter leading-[0.8] mb-8 transition-all">Garima <br><span class="text-sky-500">Poudel</span></h1>
-                
-                <div class="mb-10 max-w-sm">
-                    <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2"><span>Live Bio-Signature</span><span class="text-sky-500">Stable</span></div>
-                    <div class="bg-sky-500/5 h-10 rounded-xl flex items-center px-4">
-                        <svg viewBox="0 0 100 20" class="w-full h-8"><path class="ekg-line" d="M0 10 L10 10 L15 2 L20 18 L25 10 L40 10 L45 0 L50 20 L55 10 L70 10 L75 5 L80 15 L85 10 L100 10" fill="none" stroke="#0ea5e9" stroke-width="1.5"/></svg>
-                    </div>
-                </div>
-
-                <p id="heroDesc" class="text-xl text-slate-500 max-w-md mb-10 leading-relaxed">New Grad Registered Nurse<br> Committed to providing compassionate, evidence based patient care. Eager to contribute to a high performing clinical team.</p>
-                <a href="https://www.linkedin.com/in/garima-poudel-1a7378301/" target="_blank" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:bg-sky-600 transition-all interactive">Connect on LinkedIn</a>
-            </div>
-            
-            <div class="relative" id="heroImageArea">
-                <div id="mainImgFrame" class="heart-active w-full max-w-sm mx-auto aspect-[3/4] bg-slate-200 rounded-[4rem] overflow-hidden border-[15px] border-white shadow-2xl relative z-10">
-                    <img src="images/portfolio.jpeg" class="w-full h-full object-cover grayscale transition duration-700 hover:grayscale-0" loading="eager">
-                </div>
+<body id="body">
+    <div class="page-shell">
+        <div id="introScreen" class="intro-screen">
+            <canvas id="sceneCanvas" class="intro-scene-canvas" aria-hidden="true"></canvas>
+            <div class="intro-orb one"></div>
+            <div class="intro-orb two"></div>
+            <div class="intro-ring one"></div>
+            <div class="intro-ring two"></div>
+            <div class="intro-card glass">
+                <p class="intro-label">Meet Garima</p>
+                <div id="introGreeting" class="intro-greeting">Hello</div>
             </div>
         </div>
-    </header>
-
-    <section id="experience" class="py-32 px-8">
-        <div class="max-w-7xl mx-auto">
-            <h2 id="expTitle" class="text-6xl font-black tracking-tighter mb-20">Clinical <span class="text-sky-500 italic">Experience</span></h2>
-            <div class="grid gap-12">
-                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
-                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
-                        <img src="images/maternity.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
-                    </div>
-                    <div class="lg:col-span-8 flex flex-col justify-center">
-                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">May 2025 – Jul 2025</span>
-                        <h3 class="text-3xl font-black mb-1 card-title">Nursing Intern – Obstetrics & Gynecology</h3>
-                        <p class="text-slate-400 font-bold mb-6 italic text-sm">BBMP Maternity Hospital, Bengaluru</p>
-                        <ul class="grid md:grid-cols-2 gap-4 text-sm text-slate-500 card-text">
-                            <li><strong class="text-sky-600 block">OPD:</strong> Guided patients, maintained registers for high-risk pregnancies and supported smooth patient flow.</li>
-                            <li><strong class="text-sky-600 block">Labor Room:</strong> Assisted during labor, conducted Non-Stress Tests (NSTs) and ECGs.</li>
-                            <li><strong class="text-sky-600 block">OT:</strong> Supported surgical procedures including cesarean sections and pre/post-operative protocols.</li>
-                            <li><strong class="text-sky-600 block">Postnatal:</strong> Provided breastfeeding guidance, postnatal exercises, and IV monitoring.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
-                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
-                        <img src="images/vaccine.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
-                    </div>
-                    <div class="lg:col-span-8 flex flex-col justify-center">
-                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">May 2024 – Jun 2024</span>
-                        <h3 class="text-3xl font-black mb-1 card-title">Student Nurse (Mental Rehabilitation)</h3>
-                        <p class="text-slate-400 font-bold mb-6 italic text-sm">Spandana Hospital, Bengaluru</p>
-                        <ul class="space-y-3 text-sm text-slate-500 card-text">
-                            <li>• Participated in therapeutic modalities: music therapy, psychodrama, and dance therapy for emotional well-being.</li>
-                            <li>• Provided counseling, recreational therapy, and play therapy to individuals in recovery.</li>
-                            <li>• Delivered health education to patients and families regarding coping strategies and wellness.</li>
-                            <li>• Conducted visits to psychiatric specialty units to study collaborative care and management approaches.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
-                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
-                        <img src="images/polio.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
-                    </div>
-                    <div class="lg:col-span-8 flex flex-col justify-center">
-                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">Mar 2024</span>
-                        <h3 class="text-3xl font-black mb-1 card-title">Polio Survey & Vaccination</h3>
-                        <p class="text-slate-400 font-bold mb-6 italic text-sm">Jayashree Speciality Hospital, Bangalore</p>
-                        <ul class="space-y-3 text-sm text-slate-500 card-text">
-                            <li>• Completed a community polio posting focusing on vaccination efforts via PHC centers.</li>
-                            <li>• Assisted in providing polio drops to children while ensuring adherence to safety protocols.</li>
-                            <li>• Collaborated with professionals to educate parents on immunization importance.</li>
-                            <li>• Engaged in data collection and reporting for community health initiatives.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500 interactive">
-                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
-                        <img src="images/community.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
-                    </div>
-                    <div class="lg:col-span-8 flex flex-col justify-center">
-                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2 italic">Apr 2023 – May 2023</span>
-                        <h3 class="text-3xl font-black mb-1 card-title">Community Survey & Health Education</h3>
-                        <p class="text-slate-400 font-bold mb-6 italic text-sm">Primary Health Centre Nagarbhavi</p>
-                        <ul class="space-y-2 text-sm text-slate-500 card-text">
-                            <li>• Assessed community needs as part of the BSN 2nd Year curriculum.</li>
-                            <li>• Gained proficiency in the bag technique method for safe home-care delivery.</li>
-                            <li>• Engaged in antenatal education and national health programs utilizing flashcards and pamphlets.</li>
-                            <li>• Provided education to children on worm infestation prevention and hand hygiene.</li>
-                        </ul>
-                    </div>
-                </div>
-                                <div class="card group grid lg:grid-cols-12 gap-10 p-10 rounded-[4rem] border border-slate-200 bg-white hover:border-sky-500 transition-all duration-500">
-                    <div class="lg:col-span-4 aspect-video lg:aspect-square bg-slate-100 rounded-[3rem] overflow-hidden">
-                        <img src="images/baby.jpeg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700" loading="lazy">
-                    </div>
-                    <div class="lg:col-span-8 flex flex-col justify-center">
-                        <span class="text-sky-500 font-bold uppercase tracking-widest text-xs mb-2">Oct 2022 – Nov 2022 • Internship</span>
-                        <h3 class="text-3xl font-black mb-1 card-title transition-all">Student Nurse (Clinical Posting - 1st Year)</h3>
-                        <p class="text-slate-400 font-bold mb-6">People’s Tree Hospital, Bengaluru</p>
-                        <ul class="space-y-3 text-sm text-slate-500 card-text transition-all">
-                            <li>• Applied foundational nursing knowledge: bed making and monitoring/recording vital signs.</li>
-                            <li>• Strengthened nurse-patient relationships through patient advocacy and compassionate care.</li>
-                            <li>• Assisted in patient feeding and monitored dietary intake for optimal comfort and nutrition.</li>
-                        </ul>
-                    </div>
-                </div>
-                
-            </div>
+        <div class="canvas-backdrop"></div>
+        <div class="grid-overlay"></div>
+        <div class="depth-layer" aria-hidden="true">
+            <div class="depth-orb one"></div>
+            <div class="depth-orb two"></div>
+            <div class="depth-ring one"></div>
+            <div class="depth-ring two"></div>
+            <div class="depth-plane one"></div>
+            <div class="depth-plane two"></div>
         </div>
-    </section>
+        <div id="scrollProgress"></div>
 
-    <section id="education" class="py-32 px-8">
-        <div class="max-w-7xl mx-auto">
-            <div id="eduCard" class="bg-slate-900 text-white rounded-[5rem] p-16 md:p-24 relative overflow-hidden transition-all">
-                <div class="relative z-10 flex flex-col md:flex-row items-center gap-12">
-                    <div class="w-24 h-24 bg-sky-500 rounded-3xl rotate-12 flex items-center justify-center text-4xl font-black shadow-2xl shrink-0 italic">B</div>
+        <nav id="nav" class="nav-shell fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-6xl -translate-x-1/2 rounded-full border border-white/60 bg-white/70 px-5 py-4 glass">
+            <div class="flex items-center justify-between gap-6">
+                <a href="#home" class="display-font text-3xl font-semibold tracking-tight text-sky-700">Garima.</a>
+                <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-[0.28em] section-label text-slate-500">
+                    <a href="#about" class="hover:text-sky-600 transition">About</a>
+                    <a href="#experience" class="hover:text-sky-600 transition">Experience</a>
+                    <a href="#education" class="hover:text-sky-600 transition">Education</a>
+                    <a href="#contact" class="hover:text-sky-600 transition">Contact</a>
+                </div>
+                <button id="shiftBtn" onclick="toggleShift()" class="rounded-full bg-slate-950 px-5 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-white transition hover:bg-sky-600">
+                    Night Shift
+                </button>
+            </div>
+        </nav>
+
+        <main id="home" class="px-5 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32">
+            <section class="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+                <div>
+                    <div class="floating-badge inline-flex items-center gap-3 rounded-full border border-sky-200 bg-white/70 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-sky-700 glass">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                        Open To Work
+                    </div>
+
+                    <h1 id="heroName" class="title-dark-toggle mt-6 text-[2rem] leading-[1.02] text-slate-950 sm:text-[2.35rem] lg:mt-8 lg:text-[3.25rem]">
+                        Compassionate
+                        <span class="text-sky-600">nursing care</span>
+                        with calm under pressure.
+                    </h1>
+
+                    <p id="heroDesc" class="muted mt-5 max-w-2xl text-base leading-7 text-slate-600 md:mt-6 md:text-lg md:leading-8">
+                        I am a BSN-trained nurse with hands-on experience in obstetrics, community health, mental rehabilitation, and patient education.
+                    </p>
+
+                    <div class="mt-8 flex flex-wrap gap-4">
+                        <a href="https://www.linkedin.com/in/garima-poudel-1a7378301/" target="_blank" rel="noreferrer" class="rounded-2xl bg-slate-950 px-7 py-4 text-sm font-bold text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-sky-600">
+                            View My LinkedIn
+                        </a>
+                        <a href="mailto:amiragpoudel@gmail.com" class="rounded-2xl border border-sky-200 bg-white/70 px-7 py-4 text-sm font-bold text-slate-800 glass transition hover:border-sky-400 hover:text-sky-700">
+                            Email Me
+                        </a>
+                    </div>
+
+                    <div class="mt-8 grid gap-4 sm:grid-cols-3 md:mt-10">
+                        <div class="stat-pill rounded-3xl p-5 glass">
+                            <p class="text-2xl font-extrabold text-sky-700 md:text-3xl">4+</p>
+                            <p class="muted mt-2 text-sm text-slate-600">Clinical settings across hospital and community care</p>
+                        </div>
+                        <div class="stat-pill rounded-3xl p-5 glass">
+                            <p class="text-2xl font-extrabold text-sky-700 md:text-3xl">BSN</p>
+                            <p class="muted mt-2 text-sm text-slate-600">My nursing foundation in evidence-based care</p>
+                        </div>
+                        <div class="stat-pill rounded-3xl p-5 glass">
+                            <p class="text-2xl font-extrabold text-sky-700 md:text-3xl">Patient-first</p>
+                            <p class="muted mt-2 text-sm text-slate-600">I value communication, comfort, safety, and compassion</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -right-4 bottom-10 hidden rounded-[2rem] border border-sky-200 bg-white/80 px-4 py-3 text-xs font-bold uppercase tracking-[0.2em] text-sky-700 shadow-lg glass md:block">
+                        I Care For Communities
+                    </div>
+
+                    <div id="mainImgFrame" class="hero-frame panel mx-auto w-full max-w-[17rem] rounded-[2.75rem] border-[14px] border-white p-3 sm:max-w-[20rem] md:max-w-md">
+                        <div class="image-shell rounded-[2rem]">
+                            <img src="images/portfolio.jpeg" alt="Garima Poudel portrait" class="hero-portrait w-full">
+                        </div>
+                    </div>
+
+                    <div class="panel mt-6 rounded-[2rem] p-5 glass">
+                        <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.24em] text-slate-500">
+                            <span class="section-label">Live Bio-Signature</span>
+                            <span class="text-sky-600">Stable</span>
+                        </div>
+                        <div class="mt-4 rounded-2xl bg-sky-500/5 p-3">
+                            <svg viewBox="0 0 260 36" class="h-10 w-full">
+                                <path class="ekg-line" d="M0 18 L28 18 L40 7 L52 29 L66 18 L100 18 L114 4 L128 32 L142 18 L176 18 L190 10 L204 26 L216 18 L260 18" fill="none" stroke="#0ea5e9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="mx-auto mt-24 max-w-6xl scroll-mt-28 md:scroll-mt-32">
+                <div class="panel rounded-[2.5rem] p-8 md:p-12 glass">
+                    <p class="section-label text-xs font-extrabold uppercase tracking-[0.35em] text-sky-700">About Me</p>
+                    <div class="mt-5 space-y-5 text-base leading-8 text-slate-600 muted">
+                        <p>
+                            I have trained across maternity care, labor support, community outreach, and mental health rehabilitation.
+                        </p>
+                        <p>
+                            My focus is on safe practice, patient education, and creating a calm, reassuring experience for patients and families.
+                        </p>
+                        <div class="accent-line my-6"></div>
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <p class="text-sm font-extrabold uppercase tracking-[0.2em] text-sky-700">Strengths</p>
+                                <p class="mt-2">Patient education, antenatal support, rehabilitation care, and community health.</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-extrabold uppercase tracking-[0.2em] text-sky-700">Focus</p>
+                                <p class="mt-2">Safe practice, clear communication, and reliable team-based care.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="experience" class="mx-auto mt-24 max-w-6xl scroll-mt-28 md:scroll-mt-32">
+                <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <h2 class="text-sky-400 font-black uppercase tracking-[0.3em] text-[10px] mb-4">University History</h2>
-                        <h3 class="text-5xl md:text-7xl font-black mb-4 tracking-tighter">Bachelors in Nursing (BSN)</h3>
-                        <p class="text-xl text-slate-400">Rajiv Gandhi University of Health Sciences, Bangalore</p>
+                        <p class="section-label text-xs font-extrabold uppercase tracking-[0.35em] text-sky-700">Experience</p>
+                        <h2 id="expTitle" class="title-dark-toggle mt-4 text-2xl text-slate-950 sm:text-3xl md:text-[2.4rem]">Clinical journey across care settings.</h2>
+                    </div>
+                    <p class="muted max-w-xl text-sm leading-7 text-slate-600">
+                        A progression through obstetrics, mental health, public health, and foundational nursing practice, each one strengthening both technical skill and human-centered care.
+                    </p>
+                </div>
+
+                <div class="mt-10 grid gap-8">
+                    <article class="timeline-card panel rounded-[2.5rem] p-6 pl-8 md:p-10 md:pl-12 glass">
+                        <div class="experience-card-grid">
+                            <div class="media-preview">
+                                <button class="media-toggle" type="button" aria-expanded="false">
+                                    <div class="image-shell rounded-[1.5rem]">
+                                        <img src="images/maternity.jpeg" alt="Maternity clinical posting" class="experience-image maternity-image">
+                                    </div>
+                                    <div class="media-preview-label">
+                                        <span>Preview</span>
+                                        <span>Tap to expand</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div>
+                                <p class="timeline-meta text-xs font-extrabold uppercase tracking-[0.28em] text-slate-500">May 2025 - Jul 2025</p>
+                                <h3 class="title-dark-toggle mt-3 text-2xl text-slate-950 sm:text-3xl">Nursing Intern, Obstetrics &amp; Gynecology</h3>
+                                <p class="timeline-meta mt-2 text-sm font-semibold text-slate-500">BBMP Maternity Hospital, Bengaluru</p>
+                                <div class="expandable-media mt-6">
+                                    <div class="image-shell rounded-[1.75rem]">
+                                        <img src="images/maternity.jpeg" alt="Expanded maternity clinical posting" class="experience-image maternity-image-expanded">
+                                    </div>
+                                </div>
+                                <div class="mt-6 grid gap-4 text-sm leading-7 text-slate-600 card-text md:grid-cols-2">
+                                    <p><strong class="text-sky-700">OPD:</strong> Guided patients, maintained high-risk registers, and supported efficient patient flow.</p>
+                                    <p><strong class="text-sky-700">Labor Room:</strong> Assisted during labor and helped perform NSTs and ECGs.</p>
+                                    <p><strong class="text-sky-700">Operation Theatre:</strong> Supported cesarean sections and followed pre- and post-operative protocols.</p>
+                                    <p><strong class="text-sky-700">Postnatal Care:</strong> Assisted with breastfeeding guidance, postnatal exercises, and IV monitoring.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-card panel rounded-[2.5rem] p-6 pl-8 md:p-10 md:pl-12 glass">
+                        <div class="grid gap-8 lg:grid-cols-[0.42fr_0.58fr]">
+                            <div class="flex items-center justify-center rounded-[2rem] bg-gradient-to-br from-sky-100 via-white to-slate-100 p-8">
+                                <div class="text-center">
+                                    <p class="text-xs font-extrabold uppercase tracking-[0.3em] text-sky-700">Mental Health</p>
+                                    <p class="display-font mt-4 text-2xl text-slate-900 sm:text-3xl">Healing with presence</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="timeline-meta text-xs font-extrabold uppercase tracking-[0.28em] text-slate-500">May 2024 - Jun 2024</p>
+                                <h3 class="title-dark-toggle mt-3 text-2xl text-slate-950 sm:text-3xl">Student Nurse, Mental Rehabilitation</h3>
+                                <p class="timeline-meta mt-2 text-sm font-semibold text-slate-500">Spandana Hospital, Bengaluru</p>
+                                <ul class="card-text mt-6 space-y-3 text-sm leading-7 text-slate-600">
+                                    <li>Participated in music therapy, psychodrama, and dance therapy to support emotional well-being.</li>
+                                    <li>Provided counseling support, recreational therapy, and play therapy during rehabilitation care.</li>
+                                    <li>Delivered health education for patients and families focused on coping strategies and wellness.</li>
+                                    <li>Observed collaborative management approaches through psychiatric specialty unit visits.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-card panel rounded-[2.5rem] p-6 pl-8 md:p-10 md:pl-12 glass">
+                        <div class="experience-card-grid">
+                            <div class="media-preview">
+                                <button class="media-toggle" type="button" aria-expanded="false">
+                                    <div class="image-shell rounded-[1.5rem]">
+                                        <img src="images/polio.jpeg" alt="Polio survey and vaccination" class="experience-image polio-image">
+                                    </div>
+                                    <div class="media-preview-label">
+                                        <span>Preview</span>
+                                        <span>Tap to expand</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div>
+                                <p class="timeline-meta text-xs font-extrabold uppercase tracking-[0.28em] text-slate-500">Mar 2024</p>
+                                <h3 class="title-dark-toggle mt-3 text-2xl text-slate-950 sm:text-3xl">Polio Survey &amp; Vaccination Posting</h3>
+                                <p class="timeline-meta mt-2 text-sm font-semibold text-slate-500">Jayashree Speciality Hospital, Bangalore</p>
+                                <div class="expandable-media mt-6">
+                                    <div class="image-shell rounded-[1.75rem]">
+                                        <img src="images/polio.jpeg" alt="Expanded polio survey and vaccination" class="experience-image polio-image">
+                                    </div>
+                                </div>
+                                <ul class="card-text mt-6 space-y-3 text-sm leading-7 text-slate-600">
+                                    <li>Supported vaccination efforts through PHC-linked community outreach.</li>
+                                    <li>Assisted in safe administration of polio drops for children.</li>
+                                    <li>Educated parents about the importance of immunization and preventive care.</li>
+                                    <li>Contributed to community-level data collection and reporting.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-card panel rounded-[2.5rem] p-6 pl-8 md:p-10 md:pl-12 glass">
+                        <div class="experience-card-grid">
+                            <div class="media-preview">
+                                <button class="media-toggle" type="button" aria-expanded="false">
+                                    <div class="image-shell rounded-[1.5rem]">
+                                        <img src="images/community.jpeg" alt="Community health education" class="experience-image community-image">
+                                    </div>
+                                    <div class="media-preview-label">
+                                        <span>Preview</span>
+                                        <span>Tap to expand</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div>
+                                <p class="timeline-meta text-xs font-extrabold uppercase tracking-[0.28em] text-slate-500">Apr 2023 - May 2023</p>
+                                <h3 class="title-dark-toggle mt-3 text-2xl text-slate-950 sm:text-3xl">Community Survey &amp; Health Education</h3>
+                                <p class="timeline-meta mt-2 text-sm font-semibold text-slate-500">Primary Health Centre Nagarbhavi</p>
+                                <div class="expandable-media mt-6">
+                                    <div class="image-shell rounded-[1.75rem]">
+                                        <img src="images/community.jpeg" alt="Expanded community health education" class="experience-image community-image">
+                                    </div>
+                                </div>
+                                <ul class="card-text mt-6 space-y-3 text-sm leading-7 text-slate-600">
+                                    <li>Assessed community health needs as part of the BSN second-year curriculum.</li>
+                                    <li>Practiced the bag technique method for safe and organized home care delivery.</li>
+                                    <li>Supported antenatal education and national health programs through visual teaching aids.</li>
+                                    <li>Educated children on worm infestation prevention and hand hygiene practices.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-card panel rounded-[2.5rem] p-6 pl-8 md:p-10 md:pl-12 glass">
+                        <div class="grid gap-8 lg:grid-cols-[0.42fr_0.58fr]">
+                            <div class="flex items-center justify-center rounded-[2rem] bg-gradient-to-br from-slate-100 via-white to-sky-50 p-8">
+                                <div class="text-center">
+                                    <p class="text-xs font-extrabold uppercase tracking-[0.3em] text-sky-700">Foundations</p>
+                                    <p class="display-font mt-4 text-2xl text-slate-900 sm:text-3xl">First clinical steps</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="timeline-meta text-xs font-extrabold uppercase tracking-[0.28em] text-slate-500">Oct 2022 - Nov 2022</p>
+                                <h3 class="title-dark-toggle mt-3 text-2xl text-slate-950 sm:text-3xl">Student Nurse, Clinical Posting</h3>
+                                <p class="timeline-meta mt-2 text-sm font-semibold text-slate-500">People's Tree Hospital, Bengaluru</p>
+                                <ul class="card-text mt-6 space-y-3 text-sm leading-7 text-slate-600">
+                                    <li>Applied core nursing skills including bed making and vital sign monitoring.</li>
+                                    <li>Strengthened nurse-patient relationships through compassionate and respectful care.</li>
+                                    <li>Assisted in patient feeding and monitored comfort, intake, and basic needs.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="education" class="mx-auto mt-24 max-w-6xl scroll-mt-28 md:scroll-mt-32">
+                <div class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+                    <div class="panel rounded-[2.5rem] p-8 md:p-12 glass">
+                        <p class="section-label text-xs font-extrabold uppercase tracking-[0.35em] text-sky-700">Education</p>
+                        <h2 class="title-dark-toggle mt-4 text-2xl text-slate-950 sm:text-3xl md:text-[2.4rem]">Bachelor of Science in Nursing</h2>
+                        <p class="muted mt-5 text-lg leading-8 text-slate-600">
+                            Rajiv Gandhi University of Health Sciences, Bangalore
+                        </p>
+                        <div class="accent-line my-8"></div>
+                        <p class="muted text-base leading-8 text-slate-600">
+                            Academic and clinical preparation shaped around patient safety, nursing fundamentals, community practice, maternal health, and coordinated care delivery.
+                        </p>
+                    </div>
+
+                    <div class="panel rounded-[2.5rem] p-8 md:p-12 glass">
+                        <p class="section-label text-xs font-extrabold uppercase tracking-[0.35em] text-sky-700">Core Competencies</p>
+                        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold text-slate-700">
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Patient Education</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Maternal Care Support</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Vital Sign Monitoring</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Community Outreach</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Health Promotion</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Counseling Support</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Clinical Documentation</span>
+                            <span class="rounded-full bg-sky-100 px-4 py-2">Team Collaboration</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <footer class="py-20 text-center opacity-30 text-[10px] font-black uppercase tracking-[0.5em]">
-        Garima Poudel &copy; 2026
-    </footer>
+            <section id="contact" class="mx-auto mt-24 max-w-6xl scroll-mt-28 md:scroll-mt-32">
+                <div class="panel rounded-[2.7rem] p-8 md:p-12 glass">
+                    <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                        <div>
+                            <p class="section-label text-xs font-extrabold uppercase tracking-[0.35em] text-sky-700">Contact</p>
+                            <h2 class="title-dark-toggle mt-4 text-2xl text-slate-950 sm:text-3xl md:text-[2.4rem]">Ready to contribute to a clinical team that values care and consistency.</h2>
+                            <p class="muted mt-6 max-w-2xl text-base leading-8 text-slate-600">
+                                Garima is open to nursing opportunities where patient advocacy, strong teamwork, and evidence-based practice matter.
+                            </p>
+                        </div>
+                        <div class="rounded-[2rem] bg-slate-950 p-8 text-white shadow-2xl">
+                            <p class="text-xs font-extrabold uppercase tracking-[0.3em] text-sky-300">Reach Out</p>
+                            <a href="mailto:amiragpoudel@gmail.com" class="mt-5 block text-2xl font-semibold text-white hover:text-sky-300">
+                                amiragpoudel@gmail.com
+                            </a>
+                            <a href="https://www.linkedin.com/in/garima-poudel-1a7378301/" target="_blank" rel="noreferrer" class="mt-4 inline-block text-sm font-bold uppercase tracking-[0.24em] text-sky-300 hover:text-white">
+                                LinkedIn Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="px-6 pb-10 pt-4 text-center text-[11px] font-bold uppercase tracking-[0.35em] text-slate-400 md:px-10">
+            Garima Poudel Portfolio 2026
+        </footer>
+    </div>
 
     <script>
-        // Custom Cursor Logic
-        const customCursor = document.getElementById('custom-cursor');
-        const cursorDot = customCursor.querySelector('.cursor-dot');
-        const cursorRing = customCursor.querySelector('.cursor-ring');
-        const interactiveElements = document.querySelectorAll('a, button, .interactive'); // Added .interactive class
+        const body = document.getElementById("body");
+        const pageShell = document.querySelector(".page-shell");
+        const introScreen = document.getElementById("introScreen");
+        const introGreeting = document.getElementById("introGreeting");
+        const sceneCanvas = document.getElementById("sceneCanvas");
+        const shiftBtn = document.getElementById("shiftBtn");
+        const scrollProgress = document.getElementById("scrollProgress");
+        const mediaToggles = document.querySelectorAll(".media-toggle");
+        const greetings = [
+            "Hello", "Namaste", "Hola", "Bonjour", "Ciao",
+            "Hallo", "Ola", "Salaam", "Konnichiwa", "Annyeong",
+            "Ni Hao", "Shalom", "Merhaba", "Hej", "Xin chao"
+        ];
+        const scene = {
+            ctx: sceneCanvas ? sceneCanvas.getContext("2d") : null,
+            shapes: [],
+            width: 0,
+            height: 0,
+            pointerX: 0,
+            pointerY: 0,
+            rafId: 0
+        };
 
-        document.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
-            cursorRing.style.left = e.clientX + 'px';
-            cursorRing.style.top = e.clientY + 'px';
-        });
-
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                customCursor.classList.add('cursor-plus');
-            });
-            el.addEventListener('mouseleave', () => {
-                customCursor.classList.remove('cursor-plus');
-            });
-        });
-
-        // Scroll Progress Logic
-        window.addEventListener('scroll', () => {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("scrollProgress").style.width = scrolled + "%";
-        });
-
-        // 3D Image Perspective
-        const area = document.getElementById('heroImageArea');
-        const frame = document.getElementById('mainImgFrame');
-        if (area && frame) { // Check if elements exist
-            area.addEventListener('mousemove', (e) => {
-                const { left, top, width, height } = area.getBoundingClientRect();
-                const x = (e.clientX - left) / width - 0.5;
-                const y = (e.clientY - top) / height - 0.5;
-                frame.style.transform = `perspective(1000px) rotateY(${x * 30}deg) rotateX(${y * -30}deg) scale3d(1.05, 1.05, 1.05)`;
-            });
-            area.addEventListener('mouseleave', () => {
-                frame.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
-            });
+        function updateScrollProgress() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const percent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            scrollProgress.style.width = percent + "%";
         }
 
-
-        // Confetti Logic (Simplified for performance)
-        const confettiCanvas = document.getElementById('confetti-canvas');
-        const confettiCtx = confettiCanvas.getContext('2d');
-        let particles = [];
-        const maxParticles = 50;
-
-        function resizeConfettiCanvas() {
-            confettiCanvas.width = window.innerWidth;
-            confettiCanvas.height = window.innerHeight;
+        function toggleShift() {
+            body.classList.toggle("night-shift");
+            shiftBtn.textContent = body.classList.contains("night-shift") ? "Day Shift" : "Night Shift";
         }
-        window.addEventListener('resize', resizeConfettiCanvas);
-        resizeConfettiCanvas();
 
-        function createConfetti(x, y) {
-            for (let i = 0; i < maxParticles; i++) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    radius: Math.random() * 3 + 1,
-                    color: `hsl(${Math.random() * 30 + 190}, 70%, 60%)`, // Shades of blue
-                    velocity: {
-                        x: (Math.random() - 0.5) * 8,
-                        y: (Math.random() - 0.5) * 8 - 5 // Upwards initial velocity
-                    },
-                    alpha: 1,
-                    gravity: 0.2
-                });
+        function updateDepth(event) {
+            const point = event.touches ? event.touches[0] : event;
+            const x = (point.clientX / window.innerWidth - 0.5) * 36;
+            const y = (point.clientY / window.innerHeight - 0.5) * 36;
+            pageShell.style.setProperty("--mx", x.toFixed(2) + "px");
+            pageShell.style.setProperty("--my", y.toFixed(2) + "px");
+            scene.pointerX = point.clientX / window.innerWidth - 0.5;
+            scene.pointerY = point.clientY / window.innerHeight - 0.5;
+        }
+
+        function resizeScene() {
+            if (!scene.ctx || !sceneCanvas) {
+                return;
             }
+
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            scene.width = window.innerWidth;
+            scene.height = window.innerHeight;
+            sceneCanvas.width = Math.floor(scene.width * dpr);
+            sceneCanvas.height = Math.floor(scene.height * dpr);
+            scene.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const shapeCount = Math.max(18, Math.min(34, Math.floor(scene.width / 42)));
+            const kinds = ["cross", "cross", "cross", "heart", "spark"];
+            scene.shapes = Array.from({ length: shapeCount }, () => ({
+                x: (Math.random() - 0.5) * scene.width * 1.6,
+                y: (Math.random() - 0.5) * scene.height * 1.5,
+                z: Math.random() * 1 + 0.24,
+                size: Math.random() * 14 + 12,
+                speed: Math.random() * 0.002 + 0.0008,
+                drift: (Math.random() - 0.5) * 0.18,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.003,
+                glow: Math.random() * 0.5 + 0.35,
+                kind: kinds[Math.floor(Math.random() * kinds.length)]
+            }));
         }
 
-        function updateConfetti() {
-            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.velocity.y += p.gravity;
-                p.x += p.velocity.x;
-                p.y += p.velocity.y;
-                p.alpha -= 0.0002; // Fade out
+        function getScenePalette() {
+            if (body.classList.contains("night-shift")) {
+                return {
+                    clear: "rgba(7, 17, 29, 0.14)",
+                    primary: "125, 211, 252",
+                    secondary: "253, 224, 71",
+                    line: "94, 234, 212"
+                };
+            }
 
-                if (p.alpha > 0) {
-                    confettiCtx.fillStyle = `rgba(${parseInt(p.color.substring(4,7))},${parseInt(p.color.substring(8,11))},${parseInt(p.color.substring(12,15))}, ${p.alpha})`;
-                    confettiCtx.beginPath();
-                    confettiCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    confettiCtx.fill();
+            return {
+                clear: "rgba(252, 254, 255, 0.12)",
+                primary: "14, 165, 233",
+                secondary: "245, 158, 11",
+                line: "13, 148, 136"
+            };
+        }
+
+        function projectShape(shape) {
+            const perspective = 1 / shape.z;
+            const parallaxX = scene.pointerX * 140 * perspective;
+            const parallaxY = scene.pointerY * 110 * perspective;
+
+            return {
+                x: scene.width / 2 + shape.x * perspective + parallaxX,
+                y: scene.height / 2 + shape.y * perspective + parallaxY,
+                size: shape.size * perspective,
+                alpha: Math.min(1, 0.18 + perspective * 0.24 + shape.glow * 0.16)
+            };
+        }
+
+        function drawCross(ctx, x, y, size, alpha, color) {
+            ctx.save();
+            ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+            ctx.lineWidth = Math.max(2, size * 0.18);
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(x - size * 0.5, y);
+            ctx.lineTo(x + size * 0.5, y);
+            ctx.moveTo(x, y - size * 0.5);
+            ctx.lineTo(x, y + size * 0.5);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawHeart(ctx, x, y, size, alpha, color) {
+            ctx.save();
+            ctx.fillStyle = `rgba(${color}, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(x, y + size * 0.36);
+            ctx.bezierCurveTo(x - size * 0.9, y - size * 0.1, x - size * 0.55, y - size * 0.88, x, y - size * 0.34);
+            ctx.bezierCurveTo(x + size * 0.55, y - size * 0.88, x + size * 0.9, y - size * 0.1, x, y + size * 0.36);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawSpark(ctx, x, y, size, alpha, color) {
+            ctx.save();
+            ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+            ctx.lineWidth = Math.max(1.4, size * 0.12);
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(x, y - size * 0.55);
+            ctx.lineTo(x, y + size * 0.55);
+            ctx.moveTo(x - size * 0.55, y);
+            ctx.lineTo(x + size * 0.55, y);
+            ctx.moveTo(x - size * 0.38, y - size * 0.38);
+            ctx.lineTo(x + size * 0.38, y + size * 0.38);
+            ctx.moveTo(x + size * 0.38, y - size * 0.38);
+            ctx.lineTo(x - size * 0.38, y + size * 0.38);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawRibbon(ctx, palette) {
+            const yBase = scene.height * 0.58 + scene.pointerY * 24;
+            ctx.save();
+            ctx.lineWidth = 2.2;
+            ctx.strokeStyle = `rgba(${palette.line}, 0.16)`;
+            ctx.beginPath();
+            for (let x = -40; x <= scene.width + 40; x += 14) {
+                const wave = Math.sin(x * 0.012 + performance.now() * 0.0011) * 16;
+                const lift = Math.sin(x * 0.004 + performance.now() * 0.0005) * 10;
+                const y = yBase + wave + lift;
+                if (x === -40) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function animateScene() {
+            if (!scene.ctx) {
+                return;
+            }
+
+            const palette = getScenePalette();
+            const ctx = scene.ctx;
+            ctx.clearRect(0, 0, scene.width, scene.height);
+            ctx.fillStyle = palette.clear;
+            ctx.fillRect(0, 0, scene.width, scene.height);
+            drawRibbon(ctx, palette);
+
+            const projected = [];
+
+            scene.shapes.forEach((shape) => {
+                shape.z -= shape.speed;
+                shape.y += shape.drift;
+                shape.rotation += shape.rotationSpeed;
+
+                if (shape.z <= 0.18 || Math.abs(shape.y) > scene.height) {
+                    shape.z = 1.18;
+                    shape.x = (Math.random() - 0.5) * scene.width * 1.6;
+                    shape.y = (Math.random() - 0.5) * scene.height * 1.4;
+                }
+
+                const point = projectShape(shape);
+
+                if (point.x < -80 || point.x > scene.width + 80 || point.y < -80 || point.y > scene.height + 80) {
+                    return;
+                }
+
+                projected.push({ ...point, kind: shape.kind });
+
+                const glowColor = shape.kind === "heart" ? palette.secondary : palette.primary;
+                const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, point.size * 5.5);
+                gradient.addColorStop(0, `rgba(${glowColor}, ${point.alpha * 0.55})`);
+                gradient.addColorStop(1, `rgba(${glowColor}, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, point.size * 5.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.save();
+                ctx.translate(point.x, point.y);
+                ctx.rotate(shape.rotation);
+
+                if (shape.kind === "heart") {
+                    drawHeart(ctx, 0, 0, Math.max(8, point.size * 0.72), Math.min(0.92, point.alpha + 0.08), palette.secondary);
+                } else if (shape.kind === "spark") {
+                    drawSpark(ctx, 0, 0, Math.max(9, point.size * 0.9), Math.min(0.88, point.alpha), palette.primary);
                 } else {
-                    particles.splice(i, 1);
-                    i--;
+                    drawCross(ctx, 0, 0, Math.max(10, point.size * 0.95), Math.min(0.86, point.alpha), palette.primary);
+                }
+
+                ctx.restore();
+            });
+
+            for (let i = 0; i < projected.length; i++) {
+                const a = projected[i];
+                for (let j = i + 1; j < Math.min(projected.length, i + 4); j++) {
+                    const b = projected[j];
+                    const dx = a.x - b.x;
+                    const dy = a.y - b.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150 && a.kind === "cross" && b.kind === "cross") {
+                        ctx.strokeStyle = `rgba(${palette.line}, ${(1 - distance / 150) * 0.08})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                    }
                 }
             }
-            requestAnimationFrame(updateConfetti);
+
+            scene.rafId = window.requestAnimationFrame(animateScene);
         }
 
-        function triggerConfetti(e) {
-            createConfetti(e.clientX, e.clientY);
-            updateConfetti();
-        }
-
-        // Night Shift Toggle
-        function toggleShift() {
-            const b = document.getElementById('body');
-            const n = document.getElementById('nav');
-            const nL = document.getElementById('navLinks');
-            const hN = document.getElementById('heroName');
-            const eT = document.getElementById('expTitle');
-            const cards = document.querySelectorAll('.card');
-            const frameHero = document.getElementById('mainImgFrame');
-            const fabButton = document.querySelector('.fab-button');
-
-            const isDay = b.classList.contains('bg-slate-50');
-            const btn = document.getElementById('shiftBtn'); 
-            btn.innerText = isDay ? "Day Shift" : "Night Shift"; 
-
-            b.classList.toggle('night-shift', isDay);
-            b.classList.toggle('bg-slate-50', !isDay);
-            
-            n.classList.toggle('bg-slate-900/80', isDay);
-            n.classList.toggle('bg-white/80', !isDay);
-            n.classList.toggle('border-slate-800', isDay);
-            nL.classList.toggle('text-slate-400', isDay);
-            nL.classList.toggle('text-slate-500', !isDay);
-            hN.classList.toggle('text-white', isDay);
-            eT.classList.toggle('text-white', isDay);
-            frameHero.classList.toggle('border-slate-800', isDay);
-            frameHero.classList.toggle('border-white', !isDay);
-
-            cards.forEach(c => {
-                c.classList.toggle('bg-slate-900', isDay);
-                c.classList.toggle('border-slate-800', isDay);
-                c.classList.toggle('bg-white', !isDay);
-                c.querySelector('.card-title').classList.toggle('text-white', isDay);
-                c.querySelector('.card-text').classList.toggle('text-slate-400', isDay);
-            });
-
-            // Adjust FAB color for night shift
-            if (isDay) {
-                fabButton.style.backgroundColor = 'rgba(14, 165, 233, 0.2)';
-                fabButton.style.borderColor = 'rgba(14, 165, 233, 0.3)';
-                fabButton.querySelector('svg').style.color = '#0ea5e9';
-            } else {
-                fabButton.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                fabButton.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                fabButton.querySelector('svg').style.color = '#0ea5e9'; // Keep original blue or adjust if needed
+        function initScene() {
+            if (!scene.ctx) {
+                return;
             }
+
+            resizeScene();
+            if (scene.rafId) {
+                window.cancelAnimationFrame(scene.rafId);
+            }
+            animateScene();
         }
+
+        function runIntroSequence() {
+            if (!introScreen || !introGreeting) {
+                return;
+            }
+
+            const totalDuration = 3000;
+            const stepDuration = Math.max(50, Math.floor(totalDuration / greetings.length));
+            let index = 0;
+
+            introGreeting.textContent = greetings[0];
+
+            const swapGreeting = () => {
+                introGreeting.style.opacity = "0.12";
+                introGreeting.style.transform = "translateY(8px)";
+
+                window.setTimeout(() => {
+                    introGreeting.textContent = greetings[index % greetings.length];
+                    introGreeting.style.opacity = "1";
+                    introGreeting.style.transform = "translateY(0)";
+                    index += 1;
+                }, 70);
+            };
+
+            const interval = window.setInterval(() => {
+                if (index >= greetings.length) {
+                    window.clearInterval(interval);
+                    return;
+                }
+                swapGreeting();
+            }, stepDuration);
+
+            window.setTimeout(() => {
+                window.clearInterval(interval);
+                introScreen.classList.add("hidden");
+                if (scene.rafId) {
+                    window.cancelAnimationFrame(scene.rafId);
+                    scene.rafId = 0;
+                }
+            }, totalDuration + 280);
+        }
+
+        mediaToggles.forEach((button) => {
+            button.addEventListener("click", () => {
+                const card = button.closest(".timeline-card");
+                const expanded = card.classList.toggle("expanded");
+                button.setAttribute("aria-expanded", expanded ? "true" : "false");
+                const hint = button.querySelector(".media-preview-label span:last-child");
+                if (hint) {
+                    hint.textContent = expanded ? "Tap to collapse" : "Tap to expand";
+                }
+            });
+        });
+
+        window.addEventListener("scroll", updateScrollProgress, { passive: true });
+        window.addEventListener("mousemove", updateDepth, { passive: true });
+        window.addEventListener("touchmove", updateDepth, { passive: true });
+        window.addEventListener("resize", resizeScene, { passive: true });
+        updateScrollProgress();
+        initScene();
+        runIntroSequence();
     </script>
 </body>
 </html>
-
-
